@@ -77,13 +77,23 @@ h1,h2,h3{font-family:"Baloo 2",sans-serif;margin:0;line-height:1.05;letter-spaci
 
 /* ---------------- board ---------------- */
 .board{position:relative;width:100%;aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
-.grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(var(--n),1fr);grid-template-rows:repeat(var(--n),1fr);border-radius:14px;overflow:hidden}
-.cell{position:relative;background:var(--tint);box-shadow:inset 0 0 0 .5px rgba(42,33,27,.14);display:grid;place-items:center;cursor:pointer;
-  transition:filter .2s}
+.grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(var(--n),1fr);grid-template-rows:repeat(var(--n),1fr);gap:2px;
+  border-radius:14px;overflow:hidden;background:#e6d6bb}
+.cell{position:relative;border-radius:7px;display:grid;place-items:center;cursor:pointer;transition:filter .2s,background .25s;
+  background:linear-gradient(180deg,rgba(255,255,255,.38),rgba(255,255,255,0) 55%),var(--tint);
+  box-shadow:inset 0 1.5px 0 rgba(255,255,255,.55),inset 0 -2.5px 0 rgba(42,33,27,.09)}
 .board.play .cell:hover{filter:brightness(1.05) saturate(1.1)}
-.cell .badge{position:absolute;left:5%;top:5%;width:24%;opacity:.55;pointer-events:none}
-.cell .pc{width:80%;height:80%;pointer-events:none;filter:drop-shadow(0 3px 0 rgba(42,33,27,.18));will-change:transform}
-.cell .xm{width:34%;height:34%;pointer-events:none;stroke:var(--ink-2);stroke-width:2.6;stroke-linecap:round;fill:none;opacity:.7}
+.cell .badge{position:absolute;left:5%;top:5%;width:34%;aspect-ratio:1;border-radius:50%;background:#fffaf1;display:grid;place-items:center;
+  box-shadow:0 1.5px 0 rgba(42,33,27,.16);pointer-events:none;transition:opacity .4s,transform .4s var(--ease-spring);z-index:1}
+.cell .badge svg{width:80%;height:80%}
+.cell.has .badge{opacity:0}
+.cell.x .badge{opacity:.55}
+.cell.areadone .badge{opacity:.38}
+.cell .pc{width:80%;height:80%;pointer-events:none;filter:drop-shadow(0 3px 0 rgba(42,33,27,.18));will-change:transform;position:relative;z-index:2}
+.cell.has{background:linear-gradient(180deg,rgba(255,255,255,.62),rgba(255,255,255,.25)),var(--tint);box-shadow:inset 0 0 0 2px rgba(255,255,255,.7),inset 0 -3px 0 rgba(42,33,27,.12)}
+.cell.x{background:linear-gradient(180deg,rgba(42,33,27,.0),rgba(42,33,27,.05)),var(--tint)}
+.cell.clash,.cell.has.clash{background:color-mix(in srgb,var(--tint) 62%,#fb7185)}
+.cell .xm{width:38%;height:38%;pointer-events:none;stroke:#7a6a5c;stroke-width:3;stroke-linecap:round;fill:none;opacity:.8}
 .cell .xm path{stroke-dasharray:15;stroke-dashoffset:15;animation:drawx .25s var(--ease-out) forwards}
 .cell .xm path+path{animation-delay:.08s}
 @keyframes drawx{to{stroke-dashoffset:0}}
@@ -120,7 +130,15 @@ svg.walls .frame{fill:none;stroke:var(--ink);stroke-width:.11}
 svg.walls.draw path,svg.walls.draw .frame{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:wall 1.1s var(--ease-out) forwards}
 @keyframes wall{to{stroke-dashoffset:0}}
 svg.clashes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-svg.clashes line{stroke:#e11d48;stroke-width:.07;stroke-linecap:round;stroke-dasharray:.16 .14;animation:march .6s linear infinite}
+svg.clashes line{stroke:#e11d48;stroke-width:.085;stroke-linecap:round;stroke-dasharray:.2 .13;animation:march .6s linear infinite;
+  filter:drop-shadow(0 0 .04px #fff)}
+.praise{position:absolute;z-index:6;pointer-events:none;transform:translate(-50%,-50%);font:800 clamp(18px,4.6vw,26px)/1 "Baloo 2",sans-serif;
+  color:var(--ac);white-space:nowrap;-webkit-text-stroke:5px #fffaf1;paint-order:stroke fill;animation:praise 1.15s var(--ease-out) forwards}
+@keyframes praise{0%{opacity:0;transform:translate(-50%,-10%) scale(.5) rotate(-6deg)}22%{opacity:1;transform:translate(-50%,-90%) scale(1.12) rotate(3deg)}
+  70%{opacity:1;transform:translate(-50%,-125%) scale(1)}100%{opacity:0;transform:translate(-50%,-160%) scale(.95)}}
+.spark{position:absolute;z-index:5;width:9px;height:9px;pointer-events:none;background:var(--ac);clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
+  animation:spark .7s var(--ease-out) forwards}
+@keyframes spark{0%{opacity:1;transform:translate(-50%,-50%) scale(.4)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) scale(1.1) rotate(90deg)}}
 @keyframes march{to{stroke-dashoffset:-.6}}
 
 /* ---------------- sections ---------------- */
@@ -173,11 +191,18 @@ section{padding:110px 0}
 /* play */
 .play-grid{display:grid;grid-template-columns:minmax(0,460px) minmax(0,1fr);gap:46px;align-items:start}
 .playcard{background:#fff;border-radius:26px;padding:18px;box-shadow:0 1px 0 var(--line),0 30px 60px -30px rgba(42,33,27,.5);position:relative}
-.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
-.hud{display:flex;justify-content:space-between;align-items:center;margin:14px 2px 0;font:600 15px "Baloo 2";color:var(--ink-2)}
-.hud .t{font:500 15px "JetBrains Mono",monospace;color:var(--ink)}
-.tools{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.tools .btn{padding:10px 16px;font-size:15px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;padding:5px;border-radius:999px;background:var(--paper-2)}
+.tabs .btn{justify-content:center;padding:10px 8px;font-size:15px;white-space:nowrap;background:transparent;box-shadow:none}
+.tabs .btn[aria-pressed="true"]{background:#fff;color:var(--ink);box-shadow:0 2px 0 var(--line),0 4px 12px -6px rgba(42,33,27,.4)}
+.tabs .btn small{font:500 13px "JetBrains Mono",monospace;color:var(--ink-2);margin-left:2px}
+.hud{display:flex;justify-content:space-between;align-items:center;margin:0 4px 10px;font:700 15px "Baloo 2";color:var(--ink-2)}
+.hud .dots{display:inline-flex;gap:4px;margin-left:8px;vertical-align:middle}
+.hud .dots i{width:9px;height:9px;border-radius:50%;background:var(--line);transition:background .3s,transform .3s var(--ease-spring)}
+.hud .dots i.on{background:var(--genda);transform:scale(1.15)}
+.hud .t{font:500 15px "JetBrains Mono",monospace;color:var(--ink);background:var(--paper-2);padding:4px 10px;border-radius:999px}
+.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.tools .btn{justify-content:center;padding:10px 4px;font-size:15px;white-space:nowrap;gap:5px}
+.tools .btn svg{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .msg{margin-top:14px;min-height:56px;padding:12px 16px;border-radius:14px;background:var(--paper-2);font-size:15.5px;line-height:1.4;color:var(--ink);
   transition:background .3s}
 .msg.bad{background:#ffe4e6}.msg.good{background:#dcfce7}
@@ -188,8 +213,11 @@ section{padding:110px 0}
 .leg svg{width:52px;height:52px}
 .leg b{font:700 20px "Baloo 2"}
 .leg span{display:block;color:var(--ink-2);font-size:15px;line-height:1.35}
-.how{margin-top:22px;padding:16px 18px;border-radius:16px;border:1.5px dashed var(--line);color:var(--ink-2);font-size:15px;line-height:1.55}
-.how b{color:var(--ink)}
+.how{margin-top:22px;padding:16px 18px;border-radius:16px;background:#fff;box-shadow:0 1px 0 var(--line);color:var(--ink-2);font-size:15px;line-height:1.55;
+  display:grid;gap:10px}
+.how .k{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center}
+.how .k b{color:var(--ink);font:700 14px "Baloo 2";background:var(--paper-2);border-radius:10px;padding:5px 8px;text-align:center}
+.how .k b.x2{background:#ffe9c7;color:#9a3412}
 .wincard{position:absolute;inset:0;border-radius:26px;background:rgba(251,246,236,.94);display:grid;place-items:center;text-align:center;
   opacity:0;pointer-events:none;transition:opacity .5s;z-index:10;backdrop-filter:blur(2px)}
 .wincard.show{opacity:1;pointer-events:auto}
@@ -268,6 +296,10 @@ canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:non
   .houses{grid-template-columns:repeat(2,1fr)}
   .pillars{grid-template-columns:1fr}
   .hero h1{font-size:72px}
+  .playcard{padding:10px;border-radius:22px}
+  .tabs .btn{font-size:14px}
+  .tools .btn{font-size:14px}.tools .btn svg{display:none}
+  .how .k{grid-template-columns:84px 1fr}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
@@ -424,18 +456,18 @@ canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:non
   <div class="play-grid">
    <div class="playcard reveal">
     <div class="tabs" role="tablist">
-     <button class="btn btn-soft" data-board="mixed" aria-pressed="true">Mixed gang &middot; 6&times;6</button>
-     <button class="btn btn-soft" data-board="warmup" aria-pressed="false">Billi warm-up &middot; 5&times;5</button>
+     <button class="btn btn-soft" data-board="mixed" aria-pressed="true">Mixed gang <small>6&times;6</small></button>
+     <button class="btn btn-soft" data-board="warmup" aria-pressed="false">Warm-up <small>5&times;5</small></button>
     </div>
+    <div class="hud"><span><span id="placedTxt">0 / 6</span><span class="dots" id="placedDots"></span></span><span class="t" id="timer">0:00</span></div>
     <div class="board play" id="playBoard"></div>
-    <div class="hud"><span id="placedTxt">0 / 6 placed</span><span class="t" id="timer">0:00</span></div>
     <div class="tools">
-     <button class="btn btn-soft" id="undoBtn">Undo</button>
-     <button class="btn btn-soft" id="hintBtn">Hint</button>
-     <button class="btn btn-soft" id="resetBtn">Restart</button>
-     <button class="btn btn-soft" id="autoBtn" aria-pressed="true">Auto-dots: on</button>
+     <button class="btn btn-soft" id="undoBtn"><svg viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg>Undo</button>
+     <button class="btn btn-soft" id="hintBtn"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 00-4 12.7V17h8v-2.3A7 7 0 0012 2z"/></svg>Hint</button>
+     <button class="btn btn-soft" id="resetBtn"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.7 9.7 0 00-6.7 2.8L3 8"/><path d="M3 3v5h5"/></svg>Restart</button>
+     <button class="btn btn-soft" id="autoBtn" aria-pressed="true" title="Show the cells your animals already block">Dots: on</button>
     </div>
-    <div class="msg" id="msg">Tap a cell once for an <b>X</b> (nobody here). Tap again to put the animal. Tap again to clear.</div>
+    <div class="msg" id="msg">Tap once for an <b>X</b> (nobody lives here). <b>Double-tap</b> to place the animal.</div>
     <div class="wincard" id="win">
      <div>
       <h3>Shabaash!</h3>
@@ -448,9 +480,11 @@ canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:non
    <div>
     <div class="legend reveal" id="legend"></div>
     <div class="how reveal">
-     <b>Tap</b> = X &rarr; animal &rarr; clear. &nbsp;<b>Drag</b> = paint many X.<br>
-     <b>Long-press an animal</b> = see its personal space.<br>
-     <b>Auto-dots</b> show cells that your animals already block. Two animals that clash will shake and get a red line.
+     <div class="k"><b>Tap</b><span>Put an <b>X</b>: nobody lives here. Tap again to clear it.</span></div>
+     <div class="k"><b class="x2">Double-tap</b><span>Place the animal. Double-tap it again to take it back.</span></div>
+     <div class="k"><b>Drag</b><span>Paint many X in one go. Start on an X to erase X's.</span></div>
+     <div class="k"><b>Hold</b><span>Press and hold an animal to see its personal space.</span></div>
+     <div class="k"><b>Dots</b><span>Small dots show the cells your animals already block. Two animals that clash shake and get a red line.</span></div>
     </div>
    </div>
   </div>
@@ -585,7 +619,7 @@ function buildBoard(host, data, {pre=false}={}){
     el.style.setProperty("--tint", M.tint(r,c));
     el.style.setProperty("--id", ((r+c)*55)+"ms");
     const g = M.reg[r][c];
-    if (firstCell[g][0]===r && firstCell[g][1]===c) el.insertAdjacentHTML("beforeend", icon(M.ra[g], "badge"));
+    if (firstCell[g][0]===r && firstCell[g][1]===c){ el.insertAdjacentHTML("beforeend", `<span class="badge">${icon(M.ra[g])}</span>`); el.dataset.g = g; }
     el.insertAdjacentHTML("beforeend", '<span class="slot"></span>');
     grid.appendChild(el); cells[r].push(el);
   }}
@@ -742,15 +776,20 @@ const Game = (() => {
   const host = $("#playBoard"), msg = $("#msg");
   const tell = (html, kind="") => { msg.innerHTML = html; msg.className = "msg " + kind; };
   const key = (r,c) => r+","+c;
+  const HELP = "Tap once for an <b>X</b> (nobody lives here). <b>Double-tap</b> to place the animal.";
+  const WORDS = ["Badhiya!", "Wah!", "Kamaal!", "Zabardast!", "Ekdum mast!", "Superstar!"];
+  let tap = null; // pending first tap: {r, c, t, stamp, S}
 
   function start(name){
     const data = BOARDS[name];
     V = buildBoard(host, data);
-    S = {name, data, n:data.size, st:[...Array(data.size)].map(()=>Array(data.size).fill(0)), hist:[], t0:0, tick:0, done:false, complete:new Set(), auto:S?S.auto:true};
+    S = {name, data, n:data.size, st:[...Array(data.size)].map(()=>Array(data.size).fill(0)), hist:[], t0:0, tick:0, done:false, complete:new Set(), auto:S?S.auto:true, streak:0};
+    tap = null;
+    $("#placedDots").innerHTML = "<i></i>".repeat(data.size);
     clearInterval(clockIv); $("#timer").textContent = "0:00";
     $("#win").classList.remove("show");
     legend(V.M);
-    tell("Tap a cell once for an <b>X</b> (nobody here). Tap again to put the animal. Tap again to clear.");
+    tell(HELP);
     refresh([]);
   }
   function legend(M){
@@ -784,7 +823,16 @@ const Game = (() => {
     });
     for (const ui of nowDone) if (!S.complete.has(ui)) glowUnit(V, V.M.units[ui].cells);
     S.complete = nowDone;
-    $("#placedTxt").textContent = `${P.length} / ${n} placed`;
+    V.cells.flat().forEach(el => { if (el.dataset.g !== undefined){
+      const ui = V.M.units.findIndex(u => u.kind==="mohalla" && u.i === +el.dataset.g); el.classList.toggle("areadone", nowDone.has(ui)); } });
+    $("#placedTxt").textContent = `${P.length} / ${n}`;
+    document.querySelectorAll("#placedDots i").forEach((d,i) => d.classList.toggle("on", i < P.length));
+    // praise a fresh animal that clashes with nobody (the word climbs with each good one in a row)
+    const ch = changed[0];
+    if (ch && S.st[ch[0]][ch[1]]===2){
+      if (!bad.has(key(...ch)) && P.length < n){ praise(ch, WORDS[Math.min(S.streak, WORDS.length-1)]); S.streak++; }
+      else if (bad.has(key(...ch))) S.streak = 0;
+    }
     if (lines.length){
       const [a,b] = lines[0];
       tell(`<b>Takraav!</b> ${ANIM[V.M.animalAt(...a)].hi} and ${ANIM[V.M.animalAt(...b)].hi} clash. ${why(a,b)}`, "bad");
@@ -798,6 +846,20 @@ const Game = (() => {
     const who = PATSET[V.M.animalAt(...a)].has(d) ? V.M.animalAt(...a) : V.M.animalAt(...b);
     return `This is inside the ${ANIM[who].hi}'s personal space.`;
   }
+  function praise([r,c], word){
+    if (RM) return;
+    const hb = host.getBoundingClientRect(), cb = V.cells[r][c].getBoundingClientRect();
+    const x = cb.left - hb.left + cb.width/2, y = cb.top - hb.top + cb.height/2, ac = ANIM[V.M.animalAt(r,c)].color;
+    const w = document.createElement("div"); w.className = "praise"; w.textContent = word;
+    w.style.left = Math.min(Math.max(x, 70), hb.width-70)+"px"; w.style.top = (y - cb.height*.25)+"px"; w.style.setProperty("--ac", ac);
+    w.addEventListener("animationend", () => w.remove()); host.appendChild(w);
+    for (let i=0;i<7;i++){
+      const a = i/7*Math.PI*2 + Math.random()*.5, d = cb.width*(.55+Math.random()*.25), s = document.createElement("i");
+      s.className = "spark"; s.style.left = x+"px"; s.style.top = y+"px"; s.style.setProperty("--ac", i%2 ? "#f59e0b" : ac);
+      s.style.setProperty("--dx", Math.cos(a)*d+"px"); s.style.setProperty("--dy", Math.sin(a)*d+"px");
+      s.addEventListener("animationend", () => s.remove()); host.appendChild(s);
+    }
+  }
   function startClock(){
     if (S.t0) return; S.t0 = Date.now();
     clearInterval(clockIv);
@@ -809,9 +871,30 @@ const Game = (() => {
     S.st[r][c] = v; startClock();
     document.querySelectorAll(".cell.hint").forEach(e=>e.classList.remove("hint"));
     if (v===0) clearCell(V,r,c); else if (v===1) putX(V,r,c); else { putAnimal(V,r,c); if (fx) ripple(V,r,c); if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(8); }
-    if (v===2 || S.st[r][c]===0) tell("Tap a cell once for an <b>X</b>, again for the animal, again to clear.");
+    if (v===2 || S.st[r][c]===0) tell(HELP);
     refresh([[r,c]]);
   }
+  // Same input as the real game: one tap toggles the X at once (no waiting).
+  // A second tap on the same cell within DOUBLE ms takes that first tap back and toggles the animal
+  // instead, as one move / one undo step.
+  const DOUBLE = 300;
+  function tapCell(r,c){
+    if (S.done) return;
+    const now = performance.now();
+    const dbl = tap && tap.S===S && tap.r===r && tap.c===c && now - tap.t <= DOUBLE && S.hist.length===tap.stamp;
+    if (dbl){
+      tap = null;
+      if (tap0.changed){ const prev = S.hist.pop(); S.st[r][c] = prev[r][c]; paint(r,c); }
+      setCell(r, c, S.st[r][c]===2 ? 0 : 2);
+    } else {
+      const before = S.hist.length;
+      setCell(r, c, S.st[r][c]===0 ? 1 : 0);
+      tap0 = {changed: S.hist.length > before};
+      tap = {r, c, t:now, stamp:S.hist.length, S};
+    }
+  }
+  let tap0 = {changed:false};
+  function paint(r,c){ const v = S.st[r][c]; if (v===0) clearCell(V,r,c); else if (v===1) putX(V,r,c); else putAnimal(V,r,c,false); }
   function win(){
     S.done = true; clearInterval(clockIv);
     tell("<b>Shabaash!</b> Every animal found its own place.", "good");
@@ -824,7 +907,7 @@ const Game = (() => {
     lastShare = `Gali Gang concept \u2014 ${S.name==="mixed"?"Mixed gang":"Billi warm-up"}\n${[...new Set(V.M.ra)].map(a=>ANIM[a].emoji).join("")}  ${t}  \u2B50\u2B50\u2B50`;
   }
 
-  // input: tap cycles, drag paints X, long-press shows personal space
+  // input: tap = X, double tap = animal, drag paints X (or erases X's when it starts on an X), long-press shows personal space
   let down = null;
   const cellAt = (x,y) => { const el = document.elementFromPoint(x,y); return el && el.closest && el.closest("#playBoard .cell"); };
   host.addEventListener("pointerdown", e => {
@@ -840,14 +923,15 @@ const Game = (() => {
     const el = cellAt(e.clientX, e.clientY); if (!el) return;
     const k = key(+el.dataset.r, +el.dataset.c); if (k===down.last) return;
     clearTimeout(down.timer);
-    if (down.v!==0) return;
-    if (!down.paint){ down.paint = true; S.hist.push(S.st.map(row=>row.slice())); setCell(down.r, down.c, 1, {record:false}); }
+    if (down.v===2) return;
+    const erase = down.v===1, from = erase ? 1 : 0, to = erase ? 0 : 1;
+    if (!down.paint){ down.paint = true; tap = null; S.hist.push(S.st.map(row=>row.slice())); setCell(down.r, down.c, to, {record:false}); }
     down.last = k;
-    if (S.st[+el.dataset.r][+el.dataset.c]===0) setCell(+el.dataset.r, +el.dataset.c, 1, {record:false});
+    if (S.st[+el.dataset.r][+el.dataset.c]===from) setCell(+el.dataset.r, +el.dataset.c, to, {record:false});
   });
   const up = () => {
     if (!down) return; clearTimeout(down.timer);
-    if (!down.paint && !down.long) setCell(down.r, down.c, (S.st[down.r][down.c]+1)%3);
+    if (!down.paint && !down.long) tapCell(down.r, down.c);
     down = null;
   };
   host.addEventListener("pointerup", up); host.addEventListener("pointercancel", () => { if(down) clearTimeout(down.timer); down=null; });
@@ -856,10 +940,8 @@ const Game = (() => {
   function undo(){
     if (S.done || !S.hist.length) return;
     const prev = S.hist.pop();
-    for (let r=0;r<S.n;r++) for (let c=0;c<S.n;c++) if (prev[r][c]!==S.st[r][c]){
-      S.st[r][c] = prev[r][c];
-      if (prev[r][c]===0) clearCell(V,r,c); else if (prev[r][c]===1) putX(V,r,c); else putAnimal(V,r,c,false);
-    }
+    tap = null; S.streak = 0;
+    for (let r=0;r<S.n;r++) for (let c=0;c<S.n;c++) if (prev[r][c]!==S.st[r][c]){ S.st[r][c] = prev[r][c]; paint(r,c); }
     tell("Undone."); refresh([]);
   }
   function hint(){
@@ -885,14 +967,14 @@ const Game = (() => {
   }
   $("#undoBtn").onclick = undo; $("#hintBtn").onclick = hint; $("#resetBtn").onclick = () => start(S.name);
   $("#againBtn").onclick = () => start(S.name);
-  $("#autoBtn").onclick = e => { S.auto = !S.auto; e.currentTarget.setAttribute("aria-pressed", S.auto); e.currentTarget.textContent = "Auto-dots: " + (S.auto?"on":"off"); refresh([]); };
+  $("#autoBtn").onclick = e => { S.auto = !S.auto; e.currentTarget.setAttribute("aria-pressed", S.auto); e.currentTarget.textContent = "Dots: " + (S.auto?"on":"off"); refresh([]); };
   $("#shareBtn").onclick = async () => { try { await navigator.clipboard.writeText(lastShare); $("#shareBtn").textContent = "Copied!"; } catch { $("#shareBtn").textContent = "Copy blocked"; } };
   document.querySelectorAll(".tabs .btn").forEach(b => b.onclick = () => {
     document.querySelectorAll(".tabs .btn").forEach(x => x.setAttribute("aria-pressed", x===b));
     start(b.dataset.board);
   });
   start("mixed");
-  return {get state(){ return S; }, setCell, start, hint, undo, get view(){ return V; }};
+  return {get state(){ return S; }, setCell, tap:tapCell, start, hint, undo, get view(){ return V; }};
 })();
 window.Game = Game;
 
