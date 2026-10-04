@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Gali Gang - a street animal logic puzzle (concept)</title>
+<title>Gali Gang - a street animal logic puzzle (early access, Android)</title>
 <link rel="canonical" href="https://galigang.iydebu.com/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta name="theme-color" content="#2d1b3d">
@@ -12,13 +12,13 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Gali Gang">
 <meta property="og:title" content="Gali Gang - a street animal logic puzzle">
-<meta property="og:description" content="Gali Gang: a calm logic puzzle on an Indian street. One animal per row, column and colour, and every animal needs its personal space. Play the concept.">
+<meta property="og:description" content="Gali Gang: a calm logic puzzle on an Indian street. One animal per row, column and colour, and every animal needs its personal space. Early access: download it free for Android.">
 <meta property="og:url" content="https://galigang.iydebu.com/">
 <meta property="og:image" content="https://galigang.iydebu.com/og.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://galigang.iydebu.com/og.png">
-<meta name="description" content="Gali Gang: a calm logic puzzle on an Indian street. One animal per row, column and colour, and every animal needs its personal space. Play the concept.">
+<meta name="description" content="Gali Gang: a calm logic puzzle on an Indian street. One animal per row, column and colour, and every animal needs its personal space. Early access: download it free for Android.">
 <link rel="stylesheet" href="fonts/fonts.css">
 <style>
 :root{
@@ -273,6 +273,22 @@ footer{background:var(--dusk);color:#d8c7e6;padding:60px 0 70px}
 footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
 footer b{font:800 30px "Baloo 2";color:#fff}
 footer a{color:#ffc27a}
+footer .credit{font-size:15px;line-height:1.7}
+/* download (early access APK) */
+.get{background:var(--dusk);color:#efe4f7;border-radius:28px;padding:38px;display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center;
+  box-shadow:0 30px 60px -30px rgba(45,27,61,.7)}
+.get .appicon{width:150px;height:150px;border-radius:34px;box-shadow:0 14px 30px -12px rgba(0,0,0,.6)}
+.get h2{color:#fff;margin:4px 0 6px}
+.get .kicker{color:#ffc27a}
+.get p{margin:0 0 18px;color:#d8c7e6}
+.get .meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:16px 0 0;font:500 14px "JetBrains Mono",monospace;color:#cbb7dd}
+.get .meta a{color:#ffc27a}
+.get .safe{display:inline-flex;align-items:center;gap:8px;background:rgba(74,222,128,.14);color:#86efac;border-radius:999px;padding:6px 12px;font:700 14px "Baloo 2"}
+.get details{margin-top:16px;color:#d8c7e6;font-size:15px}
+.get summary{cursor:pointer;color:#fff;font:700 15px "Baloo 2"}
+.get ol{margin:8px 0 0;padding-left:20px;line-height:1.6}
+.get .sha{word-break:break-all;font:500 12.5px "JetBrains Mono",monospace;color:#b9a5cc;margin-top:10px}
+@media (max-width:700px){.get{grid-template-columns:1fr;text-align:center;padding:28px 22px}.get .appicon{margin:0 auto;width:120px;height:120px}.get .meta{justify-content:center}.get ol{text-align:left}}
 
 canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:50}
 
@@ -405,11 +421,12 @@ canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:non
 
  <div class="wrap hero-in">
   <div>
-   <div class="kicker">Concept &middot; logic puzzle &middot; Android</div>
+   <div class="kicker">Early access &middot; logic puzzle &middot; Android</div>
    <h1 id="title" aria-label="Gali Gang"></h1>
    <p class="lead">Every street animal needs its <span class="hi">apni jagah</span>. One per row, one per column, one per colour. And respect their personal space.</p>
    <div class="ctas">
-    <a class="btn btn-main" href="#play">Khud khelo &rarr;</a>
+    <a class="btn btn-main" href="#download">Download for Android &darr;</a>
+    <a class="btn btn-ghost" href="#play">Khud khelo &rarr;</a>
    </div>
   </div>
   <div class="hero-board-wrap">
@@ -544,9 +561,38 @@ canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:non
  </div>
 </section>
 
+<!-- ================= DOWNLOAD ================= -->
+<section id="download" style="padding-top:20px">
+ <div class="wrap">
+  <div class="get reveal">
+   <img class="appicon" src="appicon.png" alt="Gali Gang app icon" width="150" height="150">
+   <div>
+    <div class="kicker">Early access &middot; v0.1.0</div>
+    <h2>Play it now on Android</h2>
+    <p>The Play Store release is on the way. Until then you can install the early access build straight from here. It is free, with a few ads.</p>
+    <a class="btn btn-main" href="https://github.com/iydebu/galigang-site/releases/download/v0.1.0/GaliGang-0.1.0.apk" download>Download APK &middot; 44 MB</a>
+    <div class="meta">
+     <span class="safe">&#10003; VirusTotal: 0 detections</span>
+     <a href="https://www.virustotal.com/gui/file/dd1f126962570a3be5724fb403268081fc31c8ffdee3c246cc6d9376e079b813" target="_blank" rel="noopener">See the scan report &rarr;</a>
+     <span>Android 8+ &middot; 5 Oct 2026</span>
+    </div>
+    <details>
+     <summary>How to install</summary>
+     <ol>
+      <li>Tap <b>Download APK</b> and open the file when it finishes.</li>
+      <li>If Android asks, allow <b>Install unknown apps</b> for your browser.</li>
+      <li>Tap <b>Install</b>, then open Gali Gang. Later you can switch to the Play Store version.</li>
+     </ol>
+    </details>
+    <div class="sha">SHA-256: dd1f126962570a3be5724fb403268081fc31c8ffdee3c246cc6d9376e079b813</div>
+   </div>
+  </div>
+ </div>
+</section>
+
 <footer>
  <div class="wrap">
-  <div><b>Gali Gang</b><br>Concept v0.1 &middot; working title &middot; 2026-10-04</div>
+  <div class="credit"><b>Gali Gang</b><br>Game and website by <b style="font-size:inherit">Devashish Tiwari (Debu)</b><br>Early access v0.1.0 &middot; &copy; 2026 &middot; <a href="privacy.html">Privacy policy</a></div>
   <div><a href="https://iydebu.com" target="_blank" rel="noopener">Made by Debu (iydebu) &rarr;</a></div>
  </div>
 </footer>
