@@ -1,0 +1,945 @@
+<!doctype html>
+<!-- (c) 2026 Devashish Tiwari (iydebu). All rights reserved. https://iydebu.com -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gali Gang - a street animal logic puzzle (concept)</title>
+<link rel="canonical" href="https://galigang.iydebu.com/">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#2d1b3d">
+<meta name="author" content="Devashish Tiwari (iydebu)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gali Gang">
+<meta property="og:title" content="Gali Gang - a street animal logic puzzle">
+<meta property="og:description" content="Gali Gang: a calm logic puzzle on an Indian street. One animal per row, column and colour, and every animal needs its personal space. Play the concept.">
+<meta property="og:url" content="https://galigang.iydebu.com/">
+<meta property="og:image" content="https://galigang.iydebu.com/og.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://galigang.iydebu.com/og.png">
+<meta name="description" content="Gali Gang: a calm logic puzzle on an Indian street. One animal per row, column and colour, and every animal needs its personal space. Play the concept.">
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+:root{
+  --paper:#fbf6ec; --paper-2:#f3ead9; --ink:#2a211b; --ink-2:#5b4d42; --line:#e4d6bf;
+  --sindoor:#c2410c; --genda:#f59e0b; --dusk:#2d1b3d; --plum:#5b2a5e;
+  --ease-out:cubic-bezier(.22,1,.36,1); --ease-spring:cubic-bezier(.34,1.56,.64,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:17px/1.6 "Hind",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+h1,h2,h3{font-family:"Baloo 2",sans-serif;margin:0;line-height:1.05;letter-spacing:-.015em}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+.kicker{font:600 12.5px/1 "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--sindoor)}
+.hi{font-family:"Fraunces",serif;font-style:italic;font-weight:400}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:999px;font:700 16px/1 "Baloo 2",sans-serif;
+  text-decoration:none;border:0;cursor:pointer;transition:transform .25s var(--ease-spring),background .2s,box-shadow .2s}
+.btn:active{transform:scale(.96)}
+.btn-main{background:var(--genda);color:var(--dusk);box-shadow:0 6px 0 #b45309}
+.btn-main:hover{transform:translateY(-2px)}
+.btn-ghost{background:rgba(255,255,255,.1);color:#fff;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.45)}
+.btn-ghost:hover{background:rgba(255,255,255,.18)}
+.btn-ink{background:var(--ink);color:var(--paper)}
+.btn-soft{background:var(--paper-2);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn-soft:hover{background:#ece0c9}
+.btn-soft[aria-pressed="true"]{background:var(--ink);color:var(--paper);box-shadow:none}
+
+/* ---------------- hero ---------------- */
+.hero{position:relative;min-height:100svh;color:#fff;overflow:hidden;
+  background:linear-gradient(180deg,#24163a 0%,#4b2457 30%,#a2456a 55%,#ee8a58 74%,#ffc98a 88%,#ffe0a8 100%)}
+.sun{position:absolute;left:50%;bottom:150px;width:340px;height:340px;margin-left:-170px;border-radius:50%;
+  background:radial-gradient(circle,#fff3c4 0%,#ffd27a 38%,rgba(255,170,90,.0) 70%);filter:blur(2px);animation:sunpulse 6s ease-in-out infinite}
+@keyframes sunpulse{50%{transform:scale(1.06);opacity:.9}}
+.stars i{position:absolute;width:2px;height:2px;border-radius:50%;background:#fff;opacity:.0;animation:twinkle 4s ease-in-out infinite}
+@keyframes twinkle{50%{opacity:.8}}
+.skyline{position:absolute;left:0;right:0;bottom:0;width:100%;height:300px;display:block}
+.skyline .win{animation:flick 7s steps(1) infinite}
+@keyframes flick{0%,100%{opacity:1}37%{opacity:.35}41%{opacity:1}}
+.crow{transform-box:fill-box;transform-origin:50% 100%;animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-2px) rotate(-4deg)}}
+.hero-in{position:relative;z-index:2;display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;min-height:100svh;padding-top:40px;padding-bottom:160px}
+.hero h1{font-weight:800;font-size:clamp(64px,10vw,132px);line-height:.86;margin:18px 0 18px;text-shadow:0 4px 0 rgba(36,22,58,.35)}
+.hero h1 span{display:inline-block;opacity:0;transform:translateY(40px) rotate(-6deg);animation:letter .9s var(--ease-spring) forwards}
+@keyframes letter{to{opacity:1;transform:none}}
+.hero .kicker{color:#ffd59a}
+.hero p.lead{font-size:clamp(19px,2vw,23px);line-height:1.45;max-width:30ch;color:#fff3e4;margin:0 0 30px;opacity:0;animation:fadeup .9s .9s var(--ease-out) forwards}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap;opacity:0;animation:fadeup .9s 1.1s var(--ease-out) forwards}
+@keyframes fadeup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.hero-board-wrap{position:relative;justify-self:center;width:min(440px,86vw)}
+.hero-board-wrap .card{background:var(--paper);border-radius:26px;padding:18px;box-shadow:0 30px 60px -20px rgba(36,22,58,.65),0 0 0 6px rgba(255,255,255,.08);
+  transform:rotate(2deg);animation:float 7s ease-in-out infinite}
+@keyframes float{50%{transform:rotate(1deg) translateY(-8px)}}
+.hero-caption{margin-top:16px;text-align:center;font:600 15px/1.3 "Baloo 2",sans-serif;color:var(--dusk);min-height:1.3em;transition:opacity .3s}
+.scroll-hint{position:absolute;left:50%;bottom:22px;z-index:3;transform:translateX(-50%);color:#fff;font:600 13px "JetBrains Mono",monospace;letter-spacing:.08em;opacity:.85;text-decoration:none}
+.scroll-hint::after{content:"";display:block;width:2px;height:26px;margin:8px auto 0;background:#fff;animation:drip 1.8s ease-in-out infinite;transform-origin:top}
+@keyframes drip{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
+
+/* ---------------- board ---------------- */
+.board{position:relative;width:100%;aspect-ratio:1;touch-action:none;user-select:none;-webkit-user-select:none}
+.grid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(var(--n),1fr);grid-template-rows:repeat(var(--n),1fr);border-radius:14px;overflow:hidden}
+.cell{position:relative;background:var(--tint);box-shadow:inset 0 0 0 .5px rgba(42,33,27,.14);display:grid;place-items:center;cursor:pointer;
+  transition:filter .2s}
+.board.play .cell:hover{filter:brightness(1.05) saturate(1.1)}
+.cell .badge{position:absolute;left:5%;top:5%;width:24%;opacity:.55;pointer-events:none}
+.cell .pc{width:80%;height:80%;pointer-events:none;filter:drop-shadow(0 3px 0 rgba(42,33,27,.18));will-change:transform}
+.cell .xm{width:34%;height:34%;pointer-events:none;stroke:var(--ink-2);stroke-width:2.6;stroke-linecap:round;fill:none;opacity:.7}
+.cell .xm path{stroke-dasharray:15;stroke-dashoffset:15;animation:drawx .25s var(--ease-out) forwards}
+.cell .xm path+path{animation-delay:.08s}
+@keyframes drawx{to{stroke-dashoffset:0}}
+.cell.auto::after{content:"";position:absolute;width:12%;height:12%;border-radius:50%;background:rgba(42,33,27,.22);pointer-events:none}
+.cell.has::after,.cell.x::after{display:none}
+.pc.hop{animation:hop .55s var(--ease-spring)}
+@keyframes hop{0%{transform:translateY(-55%) scale(.6,1.2);opacity:0}45%{transform:translateY(4%) scale(1.18,.82);opacity:1}70%{transform:translateY(-6%) scale(.95,1.06)}100%{transform:none}}
+.cell.clash .pc{animation:shake .5s ease-in-out infinite;filter:drop-shadow(0 0 0 #fff) drop-shadow(0 0 6px #e11d48)}
+@keyframes shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg) translateX(-3%)}75%{transform:rotate(9deg) translateX(3%)}}
+.cell.clash{background:color-mix(in srgb,var(--tint) 70%,#fb7185)}
+.cell .rip{position:absolute;inset:8%;border-radius:22%;pointer-events:none;background:var(--ac);opacity:0;animation:rip .9s var(--ease-out) forwards;animation-delay:var(--d,0ms)}
+.cell .rip.soft{animation-name:ripsoft}
+.cell .rip::after{content:"";position:absolute;inset:30%;border-radius:50%;border:2px solid #fff;opacity:.9}
+.cell .rip.soft::after{display:none}
+@keyframes rip{0%{transform:scale(.3);opacity:0}30%{transform:scale(1.05);opacity:.55}100%{transform:scale(1);opacity:0}}
+@keyframes ripsoft{0%{opacity:0}30%{opacity:.18}100%{opacity:0}}
+.cell .rip.hold{animation:riphold 1.6s var(--ease-out) forwards;animation-delay:var(--d,0ms)}
+@keyframes riphold{0%{transform:scale(.3);opacity:0}18%{transform:scale(1.05);opacity:.5}80%{opacity:.42}100%{opacity:0}}
+.cell.glow::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.0),rgba(255,255,255,.85),rgba(255,255,255,0));
+  opacity:0;animation:glow .7s ease-out forwards;animation-delay:var(--gd,0ms);pointer-events:none}
+@keyframes glow{0%{opacity:0}40%{opacity:1}100%{opacity:0}}
+.cell.bloom{animation:bloom .8s var(--ease-spring) both;animation-delay:var(--bd,0ms)}
+@keyframes bloom{0%{transform:scale(1)}40%{transform:scale(.86);filter:saturate(1.6) brightness(1.08)}100%{transform:scale(1);filter:saturate(1.25)}}
+.cell.bloom .pc{animation:dance 1.2s ease-in-out infinite;animation-delay:var(--bd,0ms)}
+@keyframes dance{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-12%) rotate(-8deg)}50%{transform:translateY(0)}75%{transform:translateY(-12%) rotate(8deg)}}
+.cell.hint{outline:4px solid var(--sindoor);outline-offset:-4px;animation:hintp 1s ease-in-out infinite;z-index:2}
+@keyframes hintp{50%{outline-color:var(--genda)}}
+.cell.pre{opacity:0;transform:scale(.6)}
+.cell.in{animation:cellin .55s var(--ease-spring) forwards;animation-delay:var(--id,0ms)}
+@keyframes cellin{from{opacity:0;transform:scale(.6) rotate(-6deg)}to{opacity:1;transform:none}}
+svg.walls{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+svg.walls path{fill:none;stroke:var(--ink);stroke-width:.075;stroke-linecap:round;stroke-linejoin:round}
+svg.walls .frame{fill:none;stroke:var(--ink);stroke-width:.11}
+svg.walls.draw path,svg.walls.draw .frame{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:wall 1.1s var(--ease-out) forwards}
+@keyframes wall{to{stroke-dashoffset:0}}
+svg.clashes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+svg.clashes line{stroke:#e11d48;stroke-width:.07;stroke-linecap:round;stroke-dasharray:.16 .14;animation:march .6s linear infinite}
+@keyframes march{to{stroke-dashoffset:-.6}}
+
+/* ---------------- sections ---------------- */
+section{padding:110px 0}
+.sec-head{max-width:720px;margin-bottom:44px}
+.sec-head h2{font-size:clamp(38px,5vw,60px);font-weight:800;margin:12px 0 12px}
+.sec-head p{font-size:19px;color:var(--ink-2);margin:0}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease-out),transform .8s var(--ease-out);transition-delay:var(--rd,0ms)}
+.reveal.on{opacity:1;transform:none}
+
+/* rules */
+.rules{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.rule{background:#fff;border-radius:20px;padding:20px;box-shadow:0 1px 0 var(--line),0 12px 30px -18px rgba(42,33,27,.35)}
+.rule .num{font:800 15px "Baloo 2";color:var(--sindoor)}
+.rule h3{font-size:24px;margin:4px 0 6px}
+.rule p{margin:0;color:var(--ink-2);font-size:15.5px;line-height:1.45}
+.mini{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;width:100%;aspect-ratio:1;margin:16px 0 16px}
+.mini i{border-radius:6px;background:var(--paper-2);position:relative;display:grid;place-items:center}
+.mini i.u{animation:sweep 2.8s ease-in-out infinite;animation-delay:var(--sd)}
+@keyframes sweep{0%,100%{background:var(--paper-2)}20%,60%{background:#ffd9a8}}
+.mini i.blk{animation:blk 2.8s ease-in-out infinite;animation-delay:var(--sd)}
+@keyframes blk{0%,100%{background:var(--paper-2)}20%,60%{background:#fbc6b6}}
+.mini svg{width:78%;height:78%}
+.mini i.g0{background:#ffd9b5}.mini i.g1{background:#d3ebbd}.mini i.g2{background:#ddd5f5}.mini i.g3{background:#f6e7a8}
+.mini i.g0.u{animation-name:sweep0}@keyframes sweep0{0%,100%{background:#ffd9b5}20%,60%{background:#ffb070}}
+
+/* gang */
+.gang{background:var(--dusk);color:#fff;position:relative;overflow:hidden}
+.gang .sec-head p{color:#d8c7e6}
+.gang .kicker{color:#ffc27a}
+.gang-row{display:grid;grid-template-columns:repeat(5,1fr);gap:16px}
+.pal{background:rgba(255,255,255,.06);border-radius:22px;padding:18px 16px 20px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
+  transition:transform .35s var(--ease-spring),background .3s}
+.pal:hover{transform:translateY(-6px);background:rgba(255,255,255,.1)}
+.pal .ps{display:grid;grid-template-columns:repeat(7,1fr);grid-template-rows:repeat(7,1fr);gap:2px;aspect-ratio:1;margin-bottom:14px}
+.pal .ps i{border-radius:4px;background:rgba(255,255,255,.07);position:relative;display:grid;place-items:center}
+.pal .ps i.line{background:rgba(255,255,255,.13)}
+.pal .ps i.b{animation:psb 3.4s infinite;animation-delay:var(--d)}
+@keyframes psb{0%,6%{background:rgba(255,255,255,.07);transform:scale(1)}14%{background:var(--ac);transform:scale(1.18)}22%,70%{background:var(--ac);transform:scale(1)}85%,100%{background:rgba(255,255,255,.07)}}
+.pal .ps i.b::after{content:"";width:40%;height:40%;border-radius:50%;background:#fff;opacity:0;animation:psdot 3.4s infinite;animation-delay:var(--d)}
+@keyframes psdot{0%,12%{opacity:0}22%,70%{opacity:.55}85%{opacity:0}}
+.pal .ps i.me svg{width:150%;height:150%;position:absolute;left:-25%;top:-25%;z-index:2;animation:me 3.4s var(--ease-spring) infinite;filter:drop-shadow(0 3px 0 rgba(0,0,0,.3))}
+@keyframes me{0%{transform:translateY(0)}6%{transform:translateY(-30%) scale(1.1,.9)}12%{transform:translateY(0) scale(.9,1.1)}18%,100%{transform:none}}
+.pal h3{font-size:28px;display:flex;align-items:baseline;gap:8px}
+.pal h3 small{font:500 14px "Hind";color:#cbb9dc}
+.pal p{margin:6px 0 0;color:#e9dcf2;font-size:15px;line-height:1.45}
+.gang-note{margin-top:30px;color:#cbb9dc;font-size:15.5px;max-width:70ch}
+.gang-note b{color:#fff}
+
+/* play */
+.play-grid{display:grid;grid-template-columns:minmax(0,460px) minmax(0,1fr);gap:46px;align-items:start}
+.playcard{background:#fff;border-radius:26px;padding:18px;box-shadow:0 1px 0 var(--line),0 30px 60px -30px rgba(42,33,27,.5);position:relative}
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.hud{display:flex;justify-content:space-between;align-items:center;margin:14px 2px 0;font:600 15px "Baloo 2";color:var(--ink-2)}
+.hud .t{font:500 15px "JetBrains Mono",monospace;color:var(--ink)}
+.tools{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.tools .btn{padding:10px 16px;font-size:15px}
+.msg{margin-top:14px;min-height:56px;padding:12px 16px;border-radius:14px;background:var(--paper-2);font-size:15.5px;line-height:1.4;color:var(--ink);
+  transition:background .3s}
+.msg.bad{background:#ffe4e6}.msg.good{background:#dcfce7}
+.legend{display:grid;gap:10px}
+.leg{display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:center;padding:12px 14px;border-radius:16px;background:#fff;
+  box-shadow:0 1px 0 var(--line);cursor:default;transition:transform .25s var(--ease-spring)}
+.leg:hover{transform:translateX(4px)}
+.leg svg{width:52px;height:52px}
+.leg b{font:700 20px "Baloo 2"}
+.leg span{display:block;color:var(--ink-2);font-size:15px;line-height:1.35}
+.how{margin-top:22px;padding:16px 18px;border-radius:16px;border:1.5px dashed var(--line);color:var(--ink-2);font-size:15px;line-height:1.55}
+.how b{color:var(--ink)}
+.wincard{position:absolute;inset:0;border-radius:26px;background:rgba(251,246,236,.94);display:grid;place-items:center;text-align:center;
+  opacity:0;pointer-events:none;transition:opacity .5s;z-index:10;backdrop-filter:blur(2px)}
+.wincard.show{opacity:1;pointer-events:auto}
+.wincard h3{font-size:56px;font-weight:800;color:var(--sindoor);transform:scale(.6);transition:transform .7s var(--ease-spring)}
+.wincard.show h3{transform:none}
+.wincard p{margin:6px 0 18px;color:var(--ink-2)}
+.wincard .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.wincard .gangline{display:flex;gap:6px;justify-content:center;margin:12px 0 4px}
+.wincard .gangline svg{width:44px;height:44px;animation:dance 1.2s ease-in-out infinite}
+
+/* chapters */
+.road{position:relative}
+.road svg.path{position:absolute;left:0;right:0;top:62px;width:100%;height:60px;overflow:visible}
+.road svg.path path{fill:none;stroke:#d9c7a8;stroke-width:5;stroke-dasharray:14 12;stroke-linecap:round}
+.houses{position:relative;display:grid;grid-template-columns:repeat(7,1fr);gap:12px}
+.house{text-align:center}
+.house .hs{width:100%;max-width:130px;margin:0 auto;display:block;transition:transform .4s var(--ease-spring)}
+.house:hover .hs{transform:translateY(-8px) rotate(-2deg)}
+.house .ch{font:600 12px "JetBrains Mono",monospace;color:var(--sindoor);letter-spacing:.08em;margin-top:10px}
+.house h3{font-size:20px;margin:2px 0 4px}
+.house p{margin:0;font-size:14px;color:var(--ink-2);line-height:1.35}
+.house.reveal{transform:translateY(40px) scale(.9)}
+.house.reveal.on{transform:none}
+.house .lamp{animation:lamp 3s ease-in-out infinite}
+@keyframes lamp{50%{opacity:.55}}
+
+/* daily */
+.daily{background:linear-gradient(180deg,var(--paper) 0%,#f7e6cb 100%)}
+.daily-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.phone{width:min(340px,86vw);margin:0 auto;background:var(--ink);border-radius:44px;padding:14px;box-shadow:0 40px 70px -30px rgba(42,33,27,.6)}
+.screen{background:var(--paper);border-radius:32px;padding:28px 22px 26px;text-align:center;position:relative;overflow:hidden}
+.screen .dno{font:800 30px "Baloo 2";margin:4px 0 2px}
+.screen .streak{display:inline-flex;gap:6px;align-items:center;background:#fff1dc;color:#9a3412;font:700 14px "Baloo 2";padding:5px 12px;border-radius:999px}
+.share-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin:20px auto 16px;width:78%}
+.share-grid i{aspect-ratio:1;border-radius:6px;background:#e9dfcd;transform:rotateX(90deg);opacity:0}
+.share-grid.go i{animation:flip .5s var(--ease-spring) forwards;animation-delay:var(--fd)}
+@keyframes flip{to{transform:none;opacity:1}}
+.share-grid i.a{position:relative}
+.share-grid i.a::after{content:"";position:absolute;inset:28%;border-radius:50%;background:var(--ink);opacity:.75}
+.screen .stats{display:flex;justify-content:center;gap:18px;font:600 15px "Baloo 2";color:var(--ink-2);margin-bottom:16px}
+.screen .stats b{display:block;font-size:24px;color:var(--ink)}
+.toast{position:absolute;left:50%;bottom:18px;transform:translate(-50%,30px);opacity:0;background:var(--ink);color:#fff;padding:8px 14px;border-radius:999px;font:600 14px "Baloo 2";transition:all .4s var(--ease-spring)}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.sharetext{font:500 15px/1.6 "JetBrains Mono",monospace;background:#fff;border-radius:16px;padding:18px 20px;box-shadow:0 1px 0 var(--line);white-space:pre-wrap;margin:22px 0 0}
+
+/* pillars + footer */
+.pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.pill{padding:22px;border-radius:20px;background:#fff;box-shadow:0 1px 0 var(--line)}
+.pill b{display:block;font:800 22px/1.15 "Baloo 2";margin-bottom:6px}
+.pill span{color:var(--ink-2);font-size:15.5px;line-height:1.45;display:block}
+.pill em{font-family:"Fraunces",serif;color:var(--sindoor)}
+footer{background:var(--dusk);color:#d8c7e6;padding:60px 0 70px}
+footer .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+footer b{font:800 30px "Baloo 2";color:#fff}
+footer a{color:#ffc27a}
+
+canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:50}
+
+@media (max-width:980px){
+  .hero-in{grid-template-columns:1fr;text-align:center;gap:34px;padding-top:70px;padding-bottom:230px}
+  .scroll-hint{display:none}
+  .hero-caption{color:#fff;text-shadow:0 1px 3px rgba(36,22,58,.7)}
+  .hero p.lead{margin-left:auto;margin-right:auto}.hero .ctas{justify-content:center}
+  .rules{grid-template-columns:repeat(2,1fr)}
+  .gang-row{grid-template-columns:repeat(2,1fr)}.gang-row .pal:last-child{grid-column:span 2;max-width:50%;justify-self:center;width:100%}
+  .play-grid,.daily-grid{grid-template-columns:1fr}
+  .houses{grid-template-columns:repeat(4,1fr);row-gap:28px}.road svg.path{display:none}
+  .pillars{grid-template-columns:repeat(2,1fr)}
+  section{padding:80px 0}
+}
+@media (max-width:560px){
+  .wrap{padding:0 18px}
+  .rules{grid-template-columns:1fr 1fr;gap:12px}.rule{padding:14px}.rule h3{font-size:20px}.rule p{font-size:14px}
+  .gang-row{gap:10px}.pal{padding:12px}.pal h3{font-size:22px}.pal p{font-size:13.5px}
+  .gang-row .pal:last-child{max-width:none}
+  .houses{grid-template-columns:repeat(2,1fr)}
+  .pillars{grid-template-columns:1fr}
+  .hero h1{font-size:72px}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:1ms!important;animation-iteration-count:1!important;transition-duration:1ms!important;scroll-behavior:auto!important}
+  .hero h1 span,.hero p.lead,.hero .ctas{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ animal art (original, drawn for this page) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs>
+  <symbol id="a-billi" viewBox="0 0 100 100">
+   <path d="M18 40 L21 9 L43 27 Q50 25 57 27 L79 9 L82 40 Q91 54 85 69 Q75 90 50 90 Q25 90 15 69 Q9 54 18 40Z" fill="#e8833a"/>
+   <path d="M25 31 L26 18 L36 27Z M75 31 L74 18 L64 27Z" fill="#ffc9a3"/>
+   <path d="M50 31 V40 M42 33 L44 41 M58 33 L56 41" stroke="#bf5f1c" stroke-width="3.2" stroke-linecap="round"/>
+   <ellipse cx="50" cy="71" rx="21" ry="14" fill="#fde3cc"/>
+   <ellipse cx="36" cy="53" rx="5.5" ry="7" fill="#2a211b"/><ellipse cx="64" cy="53" rx="5.5" ry="7" fill="#2a211b"/>
+   <circle cx="38" cy="50.5" r="2" fill="#fff"/><circle cx="66" cy="50.5" r="2" fill="#fff"/>
+   <path d="M45.5 64 H54.5 L50 69Z" fill="#c2410c"/>
+   <path d="M50 69 Q46 74 42 71.5 M50 69 Q54 74 58 71.5" stroke="#2a211b" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+   <path d="M30 66 L13 63 M30 70 L14 72 M70 66 L87 63 M70 70 L86 72" stroke="#2a211b" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+  </symbol>
+  <symbol id="a-mendak" viewBox="0 0 100 100">
+   <circle cx="29" cy="34" r="17" fill="#5a9e4b"/><circle cx="71" cy="34" r="17" fill="#5a9e4b"/>
+   <ellipse cx="50" cy="63" rx="42" ry="28" fill="#5a9e4b"/>
+   <ellipse cx="50" cy="76" rx="27" ry="13" fill="#bfe39a"/>
+   <circle cx="29" cy="33" r="11" fill="#fff"/><circle cx="71" cy="33" r="11" fill="#fff"/>
+   <circle cx="31" cy="35" r="6" fill="#2a211b"/><circle cx="69" cy="35" r="6" fill="#2a211b"/>
+   <circle cx="33" cy="32.5" r="2" fill="#fff"/><circle cx="71" cy="32.5" r="2" fill="#fff"/>
+   <path d="M27 61 Q50 79 73 61" stroke="#2f5e27" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+   <circle cx="20" cy="64" r="5.5" fill="#f9a8b8" opacity=".6"/><circle cx="80" cy="64" r="5.5" fill="#f9a8b8" opacity=".6"/>
+  </symbol>
+  <symbol id="a-ullu" viewBox="0 0 100 100">
+   <path d="M19 31 L27 10 L40 24 Q50 20 60 24 L73 10 L81 31 Q91 51 85 71 Q77 93 50 93 Q23 93 15 71 Q9 51 19 31Z" fill="#6b5ca5"/>
+   <circle cx="35" cy="46" r="15.5" fill="#ece6ff"/><circle cx="65" cy="46" r="15.5" fill="#ece6ff"/>
+   <circle cx="35" cy="46" r="8.5" fill="#f5b52e"/><circle cx="65" cy="46" r="8.5" fill="#f5b52e"/>
+   <circle cx="35" cy="46" r="4.6" fill="#2a211b"/><circle cx="65" cy="46" r="4.6" fill="#2a211b"/>
+   <circle cx="36.5" cy="44.3" r="1.6" fill="#fff"/><circle cx="66.5" cy="44.3" r="1.6" fill="#fff"/>
+   <path d="M45 57 H55 L50 67Z" fill="#f59e0b"/>
+   <path d="M37 76 q4.5 4.5 9 0 M54 76 q4.5 4.5 9 0 M45.5 84 q4.5 4.5 9 0" stroke="#4b3f80" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="a-kutta" viewBox="0 0 100 100">
+   <ellipse cx="50" cy="55" rx="31" ry="33" fill="#b07a44"/>
+   <path d="M24 29 Q5 33 9 62 Q13 74 25 65 Q27 46 31 34Z M76 29 Q95 33 91 62 Q87 74 75 65 Q73 46 69 34Z" fill="#7a4f28"/>
+   <ellipse cx="62" cy="49" rx="9.5" ry="11" fill="#7a4f28"/>
+   <ellipse cx="50" cy="72" rx="18" ry="13.5" fill="#f1d6b3"/>
+   <circle cx="38.5" cy="50" r="5.6" fill="#2a211b"/><circle cx="62" cy="50" r="5.6" fill="#2a211b"/>
+   <circle cx="40.2" cy="48.2" r="1.9" fill="#fff"/><circle cx="63.7" cy="48.2" r="1.9" fill="#fff"/>
+   <ellipse cx="50" cy="65.5" rx="6.5" ry="4.8" fill="#2a211b"/>
+   <path d="M47 76 Q50 86 53 76Z" fill="#e85d75"/>
+   <path d="M50 70 V74 M50 74 Q45 79 41 76 M50 74 Q55 79 59 76" stroke="#2a211b" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="a-bandar" viewBox="0 0 100 100">
+   <circle cx="15" cy="53" r="12.5" fill="#a8742c"/><circle cx="85" cy="53" r="12.5" fill="#a8742c"/>
+   <circle cx="15" cy="53" r="6.5" fill="#f3c98b"/><circle cx="85" cy="53" r="6.5" fill="#f3c98b"/>
+   <circle cx="50" cy="51" r="35" fill="#a8742c"/>
+   <path d="M44 18 Q50 6 57 18 Q52 13 50 21Z" fill="#7d531b"/>
+   <path d="M50 39 Q40 27 30 37 Q21 47 29 59 Q25 76 50 84 Q75 76 71 59 Q79 47 70 37 Q60 27 50 39Z" fill="#f3c98b"/>
+   <circle cx="40" cy="51" r="5.3" fill="#2a211b"/><circle cx="60" cy="51" r="5.3" fill="#2a211b"/>
+   <circle cx="41.6" cy="49.3" r="1.8" fill="#fff"/><circle cx="61.6" cy="49.3" r="1.8" fill="#fff"/>
+   <circle cx="46.5" cy="63" r="1.9" fill="#7d531b"/><circle cx="53.5" cy="63" r="1.9" fill="#7d531b"/>
+   <path d="M40 71 Q50 78 60 71" stroke="#2a211b" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  </symbol>
+ </defs>
+</svg>
+
+<canvas id="petals"></canvas>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+ <div class="stars" id="stars"></div>
+ <div class="sun"></div>
+ <svg class="skyline" viewBox="0 0 1440 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <g fill="#3a1f45" opacity=".55">
+   <path d="M0 300 V170 H70 V140 H120 V180 H190 V120 H230 V100 H260 V120 H300 V190 H380 V150 H440 V300Z"/>
+   <path d="M980 300 V150 H1040 V110 Q1070 70 1100 110 V160 H1170 V130 H1230 V170 H1300 V120 H1360 V160 H1440 V300Z"/>
+  </g>
+  <g fill="#2d1b3d">
+   <path d="M0 300 V210 H60 V185 H110 V220 H160 V170 H215 V205 H260 V160 H330 V215 H390 V190 H450 V230 H520 V200 H560 V300Z"/>
+   <path d="M600 300 V205 Q640 150 680 205 V190 H700 V150 L715 120 L730 150 V190 H760 V215 H820 V185 H880 V225 H930 V300Z"/>
+   <path d="M930 300 V195 H990 V170 H1030 V150 H1050 V170 H1080 V215 H1140 V180 H1200 V210 H1260 V165 H1320 V205 H1380 V185 H1440 V300Z"/>
+   <rect x="1046" y="128" width="30" height="22" rx="3"/><rect x="1058" y="150" width="4" height="22"/>
+   <rect x="565" y="120" width="5" height="180"/><path d="M567 122 Q585 118 592 128" stroke="#2d1b3d" stroke-width="4" fill="none"/>
+  </g>
+  <circle cx="592" cy="132" r="8" fill="#ffd27a"><animate attributeName="opacity" values="1;.6;1" dur="3s" repeatCount="indefinite"/></circle>
+  <g fill="#ffd27a">
+   <rect class="win" x="78" y="230" width="10" height="13" rx="1"/><rect x="126" y="240" width="10" height="13" rx="1"/>
+   <rect x="178" y="190" width="10" height="13" rx="1"/><rect class="win" x="285" y="180" width="10" height="13" rx="1" style="animation-delay:2s"/>
+   <rect x="350" y="235" width="10" height="13" rx="1"/><rect x="470" y="245" width="10" height="13" rx="1"/>
+   <rect x="780" y="230" width="10" height="13" rx="1"/><rect class="win" x="845" y="205" width="10" height="13" rx="1" style="animation-delay:3.5s"/>
+   <rect x="1000" y="215" width="10" height="13" rx="1"/><rect x="1155" y="200" width="10" height="13" rx="1"/>
+   <rect class="win" x="1275" y="190" width="10" height="13" rx="1" style="animation-delay:1s"/><rect x="1400" y="205" width="10" height="13" rx="1"/>
+  </g>
+  <path d="M-10 118 Q360 175 720 128 T1450 120" stroke="#1d1128" stroke-width="2" fill="none"/>
+  <path d="M-10 136 Q380 190 720 146 T1450 140" stroke="#1d1128" stroke-width="1.6" fill="none"/>
+  <g fill="#1d1128">
+   <path class="crow" d="M300 150 q6 -10 14 -6 l6 -2 -4 5 q2 6 -4 9 l-2 6 -2 -6 q-8 0 -8 -6z"/>
+   <path class="crow" style="animation-delay:.7s" d="M332 152 q6 -10 14 -6 l6 -2 -4 5 q2 6 -4 9 l-2 6 -2 -6 q-8 0 -8 -6z"/>
+   <path class="crow" style="animation-delay:1.3s" d="M1090 128 q-6 -10 -14 -6 l-6 -2 4 5 q-2 6 4 9 l2 6 2 -6 q8 0 8 -6z"/>
+  </g>
+ </svg>
+
+ <div class="wrap hero-in">
+  <div>
+   <div class="kicker">Concept &middot; logic puzzle &middot; Android</div>
+   <h1 id="title" aria-label="Gali Gang"></h1>
+   <p class="lead">Every street animal needs its <span class="hi">apni jagah</span>. One per row, one per column, one per colour. And respect their personal space.</p>
+   <div class="ctas">
+    <a class="btn btn-main" href="#play">Khud khelo &rarr;</a>
+   </div>
+  </div>
+  <div class="hero-board-wrap">
+   <div class="card"><div class="board" id="heroBoard"></div></div>
+   <div class="hero-caption" id="heroCap">&nbsp;</div>
+  </div>
+ </div>
+ <a class="scroll-hint" href="#rules">SCROLL</a>
+</header>
+
+<!-- ================= RULES ================= -->
+<section id="rules">
+ <div class="wrap">
+  <div class="sec-head reveal">
+   <div class="kicker">The rules</div>
+   <h2>Four lines. <span class="hi">Bas itna.</span></h2>
+   <p>The first three are the classic Queens rules. The fourth one is where Gali Gang is different.</p>
+  </div>
+  <div class="rules" id="rulesRow"></div>
+ </div>
+</section>
+
+<!-- ================= GANG ================= -->
+<section class="gang" id="gang">
+ <div class="wrap">
+  <div class="sec-head reveal">
+   <div class="kicker">Meet the gang</div>
+   <h2>Har janwar ki <span class="hi">apni jagah</span></h2>
+   <p>Each animal blocks a different shape around it. Same simple rules, but every animal makes you think in a new way.</p>
+  </div>
+  <div class="gang-row" id="gangRow"></div>
+  <p class="gang-note reveal">Light stripes = its row and column. Those are already blocked by rule 1 and 2. The coloured cells are the <b>personal space</b>. On a mixed board <b>both</b> animals' spaces count.</p>
+ </div>
+</section>
+
+<!-- ================= PLAY ================= -->
+<section id="play">
+ <div class="wrap">
+  <div class="sec-head reveal">
+   <div class="kicker">Playable concept</div>
+   <h2>Khud khelo</h2>
+   <p>These boards were made by our generator and checked by our solver: exactly one answer, reachable by logic only.</p>
+  </div>
+  <div class="play-grid">
+   <div class="playcard reveal">
+    <div class="tabs" role="tablist">
+     <button class="btn btn-soft" data-board="mixed" aria-pressed="true">Mixed gang &middot; 6&times;6</button>
+     <button class="btn btn-soft" data-board="warmup" aria-pressed="false">Billi warm-up &middot; 5&times;5</button>
+    </div>
+    <div class="board play" id="playBoard"></div>
+    <div class="hud"><span id="placedTxt">0 / 6 placed</span><span class="t" id="timer">0:00</span></div>
+    <div class="tools">
+     <button class="btn btn-soft" id="undoBtn">Undo</button>
+     <button class="btn btn-soft" id="hintBtn">Hint</button>
+     <button class="btn btn-soft" id="resetBtn">Restart</button>
+     <button class="btn btn-soft" id="autoBtn" aria-pressed="true">Auto-dots: on</button>
+    </div>
+    <div class="msg" id="msg">Tap a cell once for an <b>X</b> (nobody here). Tap again to put the animal. Tap again to clear.</div>
+    <div class="wincard" id="win">
+     <div>
+      <h3>Shabaash!</h3>
+      <div class="gangline" id="winGang"></div>
+      <p id="winTxt">Solved.</p>
+      <div class="row"><button class="btn btn-main" id="shareBtn">Copy share text</button><button class="btn btn-soft" id="againBtn">Play again</button></div>
+     </div>
+    </div>
+   </div>
+   <div>
+    <div class="legend reveal" id="legend"></div>
+    <div class="how reveal">
+     <b>Tap</b> = X &rarr; animal &rarr; clear. &nbsp;<b>Drag</b> = paint many X.<br>
+     <b>Long-press an animal</b> = see its personal space.<br>
+     <b>Auto-dots</b> show cells that your animals already block. Two animals that clash will shake and get a red line.
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ================= CHAPTERS ================= -->
+<section id="chapters" style="padding-top:40px">
+ <div class="wrap">
+  <div class="sec-head reveal">
+   <div class="kicker">Progression</div>
+   <h2>Gali ka safar</h2>
+   <p>Each chapter is a street with houses. Each house is a board. Every chapter teaches one new idea, first alone, then mixed with the old ones.</p>
+  </div>
+  <div class="road">
+   <svg class="path" viewBox="0 0 1000 60" preserveAspectRatio="none"><path id="roadPath" d="M10 30 Q 90 -10 170 30 T 330 30 T 490 30 T 650 30 T 810 30 T 990 30"/></svg>
+   <div class="houses" id="houses"></div>
+  </div>
+ </div>
+</section>
+
+<!-- ================= DAILY ================= -->
+<section class="daily" id="daily">
+ <div class="wrap daily-grid">
+  <div class="reveal">
+   <div class="kicker">Daily habit</div>
+   <div class="sec-head" style="margin:0">
+    <h2>Roz ka puzzle</h2>
+    <p>One new board every day, the same for everyone. Keep your streak. Share a spoiler-free card with friends, like Wordle.</p>
+   </div>
+   <div class="sharetext" id="shareText"></div>
+  </div>
+  <div class="phone reveal" style="--rd:150ms">
+   <div class="screen">
+    <div class="kicker">Roz ka puzzle</div>
+    <div class="dno" id="dailyNo">#1</div>
+    <span class="streak">&#128293; 12 day streak</span>
+    <div class="share-grid" id="shareGrid"></div>
+    <div class="stats"><div><b>2:41</b>time</div><div><b>0</b>clashes</div><div><b>&#9733;&#9733;&#9733;</b>stars</div></div>
+    <button class="btn btn-ink" id="dailyShare">Share</button>
+    <div class="toast" id="toast">Copied!</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- ================= PILLARS ================= -->
+<section id="pillars" style="padding-top:60px">
+ <div class="wrap">
+  <div class="sec-head reveal"><div class="kicker">Design pillars</div><h2>What we never break</h2></div>
+  <div class="pillars">
+   <div class="pill reveal"><b>Sirf logic</b><span>Every board has exactly one answer. You never need to <em>guess</em>.</span></div>
+   <div class="pill reveal" style="--rd:80ms"><b>Ek nayi cheez</b><span>One new animal or rule per chapter. Alone first, then mixed.</span></div>
+   <div class="pill reveal" style="--rd:160ms"><b>Shaant, mazedaar</b><span>No stress timers. Every tap has a <em>hop</em>, a sound, a small smile.</span></div>
+   <div class="pill reveal" style="--rd:240ms"><b>Chhota session</b><span>A board takes a few minutes. Perfect with a cup of chai.</span></div>
+  </div>
+ </div>
+</section>
+
+<footer>
+ <div class="wrap">
+  <div><b>Gali Gang</b><br>Concept v0.1 &middot; working title &middot; 2026-10-04</div>
+  <div><a href="https://iydebu.com" target="_blank" rel="noopener">Made by Debu (iydebu) &rarr;</a></div>
+ </div>
+</footer>
+
+<script src="boards.js"></script>
+<script>
+"use strict";
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const sleep = ms => new Promise(r => setTimeout(r, RM ? 0 : ms));
+const $ = s => document.querySelector(s);
+
+/* ---------------- rules  ---------------- */
+const diag = ks => ks.flatMap(k => [[k,k],[k,-k],[-k,k],[-k,-k]]);
+const PAT = {
+  billi: diag([1]),
+  mendak: [[1,2],[2,1],[-1,2],[-2,1],[1,-2],[2,-1],[-1,-2],[-2,-1]],
+  ullu: diag([1,2,3,4,5,6,7,8,9]),
+  kutta: [],
+  bandar: diag([2]),
+};
+const PATSET = Object.fromEntries(Object.entries(PAT).map(([k,v]) => [k, new Set(v.map(d => d.join(",")))]));
+const ANIM = {
+  billi:  {hi:"Billi",  en:"Cat",    emoji:"\u{1F431}", color:"#e8833a", rule:"Blocks the 4 touching corners. The classic."},
+  mendak: {hi:"Mendak", en:"Frog",   emoji:"\u{1F438}", color:"#4f9a3f", rule:"Blocks knight jumps, like the horse in chess."},
+  ullu:   {hi:"Ullu",   en:"Owl",    emoji:"\u{1F989}", color:"#6b5ca5", rule:"Blocks the full diagonal lines, edge to edge."},
+  kutta:  {hi:"Kutta",  en:"Dog",    emoji:"\u{1F436}", color:"#a26b37", rule:"Blocks nothing extra. Very chill dost."},
+  bandar: {hi:"Bandar", en:"Monkey", emoji:"\u{1F435}", color:"#c69a18", rule:"Blocks only 2 steps away on the diagonal. Corners are fine!"},
+};
+const TINTS = {billi:["#ffd9b5","#f8c193"], mendak:["#d3ebbd","#b5da9a"], ullu:["#ddd5f5","#c7bcee"], kutta:["#efd9bf","#e0c3a0"], bandar:["#f6e7a8","#eed780"]};
+const icon = (a, cls="") => `<svg class="${cls}" viewBox="0 0 100 100"><use href="#a-${a}"/></svg>`;
+
+function makeModel(data){
+  const n = data.size, reg = data.regions, ra = data.animals;
+  const animalAt = (r,c) => ra[reg[r][c]];
+  const conflict = (a,b) => {
+    if (a[0]===b[0] && a[1]===b[1]) return true;
+    if (a[0]===b[0] || a[1]===b[1]) return true;
+    if (reg[a[0]][a[1]] === reg[b[0]][b[1]]) return true;
+    const d = (b[0]-a[0])+","+(b[1]-a[1]);
+    return PATSET[animalAt(...a)].has(d) || PATSET[animalAt(...b)].has(d);
+  };
+  const units = [];
+  for (let i=0;i<n;i++){
+    units.push({kind:"row", i, cells:[...Array(n)].map((_,c)=>[i,c])});
+    units.push({kind:"column", i, cells:[...Array(n)].map((_,r)=>[r,i])});
+  }
+  for (let g=0; g<n; g++){
+    const cells=[]; for (let r=0;r<n;r++) for (let c=0;c<n;c++) if (reg[r][c]===g) cells.push([r,c]);
+    units.push({kind:"mohalla", i:g, cells});
+  }
+  const shade = [], seen = {};
+  ra.forEach((a,g) => { seen[a] = (seen[a]||0); shade[g] = seen[a]++ % 2; });
+  const tint = (r,c) => { const g = reg[r][c]; return TINTS[ra[g]][shade[g]]; };
+  return {n, reg, ra, animalAt, conflict, units, tint, sol:data.solution};
+}
+
+/* ---------------- board view ---------------- */
+function buildBoard(host, data, {pre=false}={}){
+  const M = makeModel(data), n = M.n;
+  host.innerHTML = "";
+  host.style.setProperty("--n", n);
+  const grid = document.createElement("div"); grid.className = "grid";
+  const cells = [];
+  const firstCell = {};
+  for (let r=0;r<n;r++) for (let c=0;c<n;c++){ const g=M.reg[r][c]; if(!(g in firstCell)) firstCell[g]=[r,c]; }
+  for (let r=0;r<n;r++){ cells.push([]); for (let c=0;c<n;c++){
+    const el = document.createElement("div");
+    el.className = "cell" + (pre ? " pre" : "");
+    el.dataset.r = r; el.dataset.c = c;
+    el.style.setProperty("--tint", M.tint(r,c));
+    el.style.setProperty("--id", ((r+c)*55)+"ms");
+    const g = M.reg[r][c];
+    if (firstCell[g][0]===r && firstCell[g][1]===c) el.insertAdjacentHTML("beforeend", icon(M.ra[g], "badge"));
+    el.insertAdjacentHTML("beforeend", '<span class="slot"></span>');
+    grid.appendChild(el); cells[r].push(el);
+  }}
+  host.appendChild(grid);
+  // region walls as one SVG path (edges between different regions)
+  let d = "";
+  for (let r=0;r<n;r++) for (let c=0;c<n;c++){
+    if (c<n-1 && M.reg[r][c]!==M.reg[r][c+1]) d += `M${c+1} ${r}V${r+1}`;
+    if (r<n-1 && M.reg[r][c]!==M.reg[r+1][c]) d += `M${c} ${r+1}H${c+1}`;
+  }
+  const walls = document.createElementNS("http://www.w3.org/2000/svg","svg");
+  walls.setAttribute("class","walls"); walls.setAttribute("viewBox",`0 0 ${n} ${n}`);
+  walls.innerHTML = `<path d="${d}" style="--len:${n*n*2}"/><rect class="frame" x="0" y="0" width="${n}" height="${n}" rx=".35" style="--len:${n*4+1}"/>`;
+  host.appendChild(walls);
+  const clash = document.createElementNS("http://www.w3.org/2000/svg","svg");
+  clash.setAttribute("class","clashes"); clash.setAttribute("viewBox",`0 0 ${n} ${n}`);
+  host.appendChild(clash);
+  return {M, cells, walls, clash, host};
+}
+function setSlot(el, html){ const s = el.querySelector(".slot"); s.outerHTML = `<span class="slot" style="display:contents">${html}</span>`; }
+function putAnimal(V, r, c, hop=true){
+  const el = V.cells[r][c];
+  setSlot(el, icon(V.M.animalAt(r,c), "pc" + (hop && !RM ? " hop" : "")));
+  el.classList.add("has"); el.classList.remove("x");
+}
+function putX(V, r, c){ const el=V.cells[r][c]; setSlot(el, '<svg class="xm" viewBox="0 0 20 20"><path d="M5 5L15 15"/><path d="M15 5L5 15"/></svg>'); el.classList.add("x"); el.classList.remove("has"); }
+function clearCell(V, r, c){ const el=V.cells[r][c]; setSlot(el, ""); el.classList.remove("x","has","clash"); }
+
+function ripple(V, r, c, {hold=false}={}){
+  const a = V.M.animalAt(r,c), color = ANIM[a].color, n = V.M.n;
+  const add = (rr, cc, cls, delay) => {
+    if (rr<0||cc<0||rr>=n||cc>=n) return;
+    const s = document.createElement("span");
+    s.className = "rip " + cls; s.style.setProperty("--ac", color); s.style.setProperty("--d", delay+"ms");
+    s.addEventListener("animationend", () => s.remove());
+    V.cells[rr][cc].appendChild(s);
+  };
+  if (hold){ for (let i=0;i<n;i++){ if(i!==c) add(r,i,"soft",Math.abs(i-c)*40); if(i!==r) add(i,c,"soft",Math.abs(i-r)*40);} }
+  for (const [dr,dc] of PAT[a]) add(r+dr, c+dc, hold ? "hold" : "", (Math.max(Math.abs(dr),Math.abs(dc)))*90);
+}
+function glowUnit(V, cells){
+  cells.forEach(([r,c],i) => { const el=V.cells[r][c]; el.classList.remove("glow"); void el.offsetWidth; el.style.setProperty("--gd", (i*45)+"ms"); el.classList.add("glow");
+    setTimeout(()=>el.classList.remove("glow"), 900+i*45); });
+}
+function bloom(V){
+  const n=V.M.n, m=(n-1)/2;
+  V.cells.flat().forEach(el => { const r=+el.dataset.r, c=+el.dataset.c; el.style.setProperty("--bd", (Math.hypot(r-m,c-m)*110)+"ms"); el.classList.add("bloom"); });
+}
+
+/* ---------------- petals (genda phool) ---------------- */
+const petals = (() => {
+  const cv = $("#petals"), ctx = cv.getContext("2d"); let parts = [], raf = 0;
+  const fit = () => { cv.width = innerWidth*devicePixelRatio; cv.height = innerHeight*devicePixelRatio; };
+  addEventListener("resize", fit); fit();
+  const cols = ["#f59e0b","#fb923c","#fbbf24","#ea580c","#fde68a","#e11d48"];
+  function tick(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    parts = parts.filter(p => p.y < cv.height + 40);
+    for (const p of parts){
+      p.vy += 0.035*devicePixelRatio; p.vx *= .992; p.x += p.vx + Math.sin(p.t+=.05)*.6*devicePixelRatio; p.y += p.vy; p.rot += p.vr;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot); ctx.scale(1, Math.abs(Math.sin(p.t*1.7))*.7+.3);
+      ctx.fillStyle = p.c; ctx.beginPath(); ctx.ellipse(0,0,p.s,p.s*.55,0,0,Math.PI*2); ctx.fill(); ctx.restore();
+    }
+    raf = parts.length ? requestAnimationFrame(tick) : 0;
+  }
+  return (x, y, count=140) => {
+    if (RM) return;
+    const dpr = devicePixelRatio;
+    for (let i=0;i<count;i++){
+      const a = -Math.PI/2 + (Math.random()-.5)*2.2, sp = (4+Math.random()*9)*dpr;
+      parts.push({x:x*dpr, y:y*dpr, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp, s:(4+Math.random()*6)*dpr, c:cols[i%cols.length], rot:Math.random()*6, vr:(Math.random()-.5)*.3, t:Math.random()*6});
+    }
+    if (!raf) raf = requestAnimationFrame(tick);
+  };
+})();
+
+/* ---------------- hero ---------------- */
+(function hero(){
+  const t = $("#title"); const word = "Gali Gang";
+  t.innerHTML = [...word].map((ch,i) => ch===" " ? "<br>" : `<span style="animation-delay:${120+i*70}ms">${ch}</span>`).join("");
+  const st = $("#stars");
+  for (let i=0;i<40;i++){ const s=document.createElement("i"); s.style.left=Math.random()*100+"%"; s.style.top=Math.random()*45+"%"; s.style.animationDelay=(Math.random()*4)+"s"; st.appendChild(s); }
+
+  const host = $("#heroBoard"), cap = $("#heroCap");
+  const say = txt => { cap.style.opacity = 0; setTimeout(()=>{ cap.innerHTML = txt; cap.style.opacity = 1; }, RM?0:200); };
+  async function loop(){
+    for(;;){
+      const V = buildBoard(host, BOARDS.hero, {pre: !RM});
+      say("&nbsp;");
+      await sleep(100);
+      V.cells.flat().forEach(el => el.classList.replace("pre","in"));
+      if (!RM) V.walls.classList.add("draw");
+      await sleep(1100);
+      const order = [...BOARDS.hero.solution].sort(() => Math.random()-.5);
+      for (const [r,c] of order){
+        const a = V.M.animalAt(r,c);
+        say(`<b>${ANIM[a].hi}</b> &middot; ${ANIM[a].rule}`);
+        putAnimal(V, r, c); ripple(V, r, c);
+        await sleep(1350);
+        if (RM) continue;
+      }
+      say("Sab ko apni jagah mil gayi. <b>Solved!</b>");
+      bloom(V);
+      const b = host.getBoundingClientRect();
+      if (b.bottom > 0 && b.top < innerHeight && !RM) petals(b.left+b.width/2, b.top+b.height/2, 70);
+      if (RM) return;
+      await sleep(3600);
+      host.style.transition = "opacity .5s"; host.style.opacity = 0; await sleep(550); host.style.opacity = 1;
+    }
+  }
+  loop();
+})();
+
+/* ---------------- rules cards ---------------- */
+(function rules(){
+  const B = "billi";
+  const mk = (title, text, build) => {
+    const cells = [...Array(16)].map((_,i) => build(Math.floor(i/4), i%4)).join("");
+    return `<div class="rule reveal"><div class="num">${title[0]}</div><h3>${title[1]}</h3><div class="mini">${cells}</div><p>${text}</p></div>`;
+  };
+  const cat = icon(B);
+  const html = [
+    mk(["1","One per row"], "Every row has exactly one animal.", (r,c) => r===1 ? `<i class="u" style="--sd:${c*90}ms">${c===2?cat:""}</i>` : "<i></i>"),
+    mk(["2","One per column"], "Every column has exactly one animal.", (r,c) => c===1 ? `<i class="u" style="--sd:${r*90}ms">${r===3?cat:""}</i>` : "<i></i>"),
+    mk(["3","One per mohalla"], "Every colour area (mohalla) has exactly one animal.", (r,c) => {
+      const g = [[0,0,1,1],[0,2,2,1],[3,2,2,1],[3,3,3,3]][r][c];
+      return `<i class="g${g}${g===0?" u":""}" style="--sd:${(r+c)*90}ms">${r===1&&c===0?cat:""}</i>`; }),
+    mk(["4","Personal space"], "No animal inside another animal's space. Each animal's space is different!", (r,c) => {
+      if (r===1&&c===1) return `<i>${cat}</i>`;
+      return Math.abs(r-1)===1 && Math.abs(c-1)===1 ? `<i class="blk" style="--sd:200ms"></i>` : "<i></i>"; }),
+  ].join("");
+  $("#rulesRow").innerHTML = html;
+})();
+
+/* ---------------- gang cards ---------------- */
+(function gang(){
+  const order = ["billi","mendak","ullu","kutta","bandar"];
+  $("#gangRow").innerHTML = order.map((a,i) => {
+    let g = "";
+    for (let r=0;r<7;r++) for (let c=0;c<7;c++){
+      const dr=r-3, dc=c-3;
+      if (!dr && !dc){ g += `<i class="me">${icon(a)}</i>`; continue; }
+      const blk = PATSET[a].has(dr+","+dc);
+      g += blk ? `<i class="b" style="--d:${Math.max(Math.abs(dr),Math.abs(dc))*110+150}ms"></i>` : `<i class="${(!dr||!dc)?"line":""}"></i>`;
+    }
+    return `<div class="pal reveal" style="--ac:${ANIM[a].color};--rd:${i*90}ms"><div class="ps">${g}</div>
+      <h3>${ANIM[a].hi} <small>${ANIM[a].en}</small></h3><p>${ANIM[a].rule}</p></div>`;
+  }).join("");
+})();
+
+/* ---------------- playable board ---------------- */
+const Game = (() => {
+  let V, S, clockIv = 0, lastShare = "";
+  const host = $("#playBoard"), msg = $("#msg");
+  const tell = (html, kind="") => { msg.innerHTML = html; msg.className = "msg " + kind; };
+  const key = (r,c) => r+","+c;
+
+  function start(name){
+    const data = BOARDS[name];
+    V = buildBoard(host, data);
+    S = {name, data, n:data.size, st:[...Array(data.size)].map(()=>Array(data.size).fill(0)), hist:[], t0:0, tick:0, done:false, complete:new Set(), auto:S?S.auto:true};
+    clearInterval(clockIv); $("#timer").textContent = "0:00";
+    $("#win").classList.remove("show");
+    legend(V.M);
+    tell("Tap a cell once for an <b>X</b> (nobody here). Tap again to put the animal. Tap again to clear.");
+    refresh([]);
+  }
+  function legend(M){
+    const kinds = [...new Set(M.ra)];
+    $("#legend").innerHTML = kinds.map(a => `<div class="leg" data-a="${a}">${icon(a)}<div><b>${ANIM[a].hi}</b> <span>${ANIM[a].rule}</span></div></div>`).join("");
+    document.querySelectorAll(".leg").forEach(el => {
+      el.addEventListener("mouseenter", () => { const a = el.dataset.a;
+        V.cells.flat().forEach(c => { if (V.M.animalAt(+c.dataset.r, +c.dataset.c) === a){ c.style.filter = "brightness(1.08) saturate(1.5)"; } else c.style.filter = "grayscale(.6) opacity(.65)"; }); });
+      el.addEventListener("mouseleave", () => V.cells.flat().forEach(c => c.style.filter = ""));
+    });
+  }
+  const placed = () => { const out=[]; S.st.forEach((row,r)=>row.forEach((v,c)=>{ if(v===2) out.push([r,c]); })); return out; };
+
+  function refresh(changed){
+    const P = placed(), n = S.n;
+    // clashes
+    const bad = new Set(); const lines = [];
+    for (let i=0;i<P.length;i++) for (let j=i+1;j<P.length;j++) if (V.M.conflict(P[i],P[j])){ bad.add(key(...P[i])); bad.add(key(...P[j])); lines.push([P[i],P[j]]); }
+    V.clash.innerHTML = lines.map(([a,b]) => `<line x1="${a[1]+.5}" y1="${a[0]+.5}" x2="${b[1]+.5}" y2="${b[0]+.5}"/>`).join("");
+    for (let r=0;r<n;r++) for (let c=0;c<n;c++){
+      const el = V.cells[r][c];
+      el.classList.toggle("clash", bad.has(key(r,c)));
+      const blocked = S.auto && S.st[r][c]===0 && P.some(p => V.M.conflict(p,[r,c]));
+      el.classList.toggle("auto", blocked);
+    }
+    // finished units
+    const nowDone = new Set();
+    V.M.units.forEach((u,ui) => {
+      const inU = P.filter(p => u.cells.some(q => q[0]===p[0] && q[1]===p[1]));
+      if (inU.length===1 && !bad.has(key(...inU[0]))) nowDone.add(ui);
+    });
+    for (const ui of nowDone) if (!S.complete.has(ui)) glowUnit(V, V.M.units[ui].cells);
+    S.complete = nowDone;
+    $("#placedTxt").textContent = `${P.length} / ${n} placed`;
+    if (lines.length){
+      const [a,b] = lines[0];
+      tell(`<b>Takraav!</b> ${ANIM[V.M.animalAt(...a)].hi} and ${ANIM[V.M.animalAt(...b)].hi} clash. ${why(a,b)}`, "bad");
+    } else if (P.length===n && !S.done) win();
+  }
+  function why(a,b){
+    if (a[0]===b[0]) return "They are in the same row.";
+    if (a[1]===b[1]) return "They are in the same column.";
+    if (V.M.reg[a[0]][a[1]]===V.M.reg[b[0]][b[1]]) return "They are in the same mohalla.";
+    const d=(b[0]-a[0])+","+(b[1]-a[1]);
+    const who = PATSET[V.M.animalAt(...a)].has(d) ? V.M.animalAt(...a) : V.M.animalAt(...b);
+    return `This is inside the ${ANIM[who].hi}'s personal space.`;
+  }
+  function startClock(){
+    if (S.t0) return; S.t0 = Date.now();
+    clearInterval(clockIv);
+    clockIv = setInterval(() => { const s = Math.floor((Date.now()-S.t0)/1000); $("#timer").textContent = `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`; }, 250);
+  }
+  function setCell(r,c,v,{record=true, fx=true}={}){
+    if (S.done || S.st[r][c]===v) return;
+    if (record) S.hist.push(S.st.map(row=>row.slice()));
+    S.st[r][c] = v; startClock();
+    document.querySelectorAll(".cell.hint").forEach(e=>e.classList.remove("hint"));
+    if (v===0) clearCell(V,r,c); else if (v===1) putX(V,r,c); else { putAnimal(V,r,c); if (fx) ripple(V,r,c); if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(8); }
+    if (v===2 || S.st[r][c]===0) tell("Tap a cell once for an <b>X</b>, again for the animal, again to clear.");
+    refresh([[r,c]]);
+  }
+  function win(){
+    S.done = true; clearInterval(clockIv);
+    tell("<b>Shabaash!</b> Every animal found its own place.", "good");
+    bloom(V);
+    const b = host.getBoundingClientRect(); petals(b.left+b.width/2, b.top+b.height/2);
+    const t = $("#timer").textContent;
+    $("#winTxt").textContent = `Solved in ${t}. No guessing needed.`;
+    $("#winGang").innerHTML = [...new Set(V.M.ra)].map(a => icon(a)).join("");
+    setTimeout(() => $("#win").classList.add("show"), RM ? 0 : 1600);
+    lastShare = `Gali Gang concept \u2014 ${S.name==="mixed"?"Mixed gang":"Billi warm-up"}\n${[...new Set(V.M.ra)].map(a=>ANIM[a].emoji).join("")}  ${t}  \u2B50\u2B50\u2B50`;
+  }
+
+  // input: tap cycles, drag paints X, long-press shows personal space
+  let down = null;
+  const cellAt = (x,y) => { const el = document.elementFromPoint(x,y); return el && el.closest && el.closest("#playBoard .cell"); };
+  host.addEventListener("pointerdown", e => {
+    const el = e.target.closest(".cell"); if (!el || S.done) return;
+    host.setPointerCapture(e.pointerId);
+    const r=+el.dataset.r, c=+el.dataset.c;
+    down = {r, c, v:S.st[r][c], paint:false, long:false, last:key(r,c)};
+    down.timer = setTimeout(() => { if (down && S.st[r][c]===2){ down.long = true; ripple(V,r,c,{hold:true});
+      tell(`<b>${ANIM[V.M.animalAt(r,c)].hi}</b>'s personal space: ${ANIM[V.M.animalAt(r,c)].rule}`); } }, 420);
+  });
+  host.addEventListener("pointermove", e => {
+    if (!down) return;
+    const el = cellAt(e.clientX, e.clientY); if (!el) return;
+    const k = key(+el.dataset.r, +el.dataset.c); if (k===down.last) return;
+    clearTimeout(down.timer);
+    if (down.v!==0) return;
+    if (!down.paint){ down.paint = true; S.hist.push(S.st.map(row=>row.slice())); setCell(down.r, down.c, 1, {record:false}); }
+    down.last = k;
+    if (S.st[+el.dataset.r][+el.dataset.c]===0) setCell(+el.dataset.r, +el.dataset.c, 1, {record:false});
+  });
+  const up = () => {
+    if (!down) return; clearTimeout(down.timer);
+    if (!down.paint && !down.long) setCell(down.r, down.c, (S.st[down.r][down.c]+1)%3);
+    down = null;
+  };
+  host.addEventListener("pointerup", up); host.addEventListener("pointercancel", () => { if(down) clearTimeout(down.timer); down=null; });
+  host.addEventListener("contextmenu", e => e.preventDefault());
+
+  function undo(){
+    if (S.done || !S.hist.length) return;
+    const prev = S.hist.pop();
+    for (let r=0;r<S.n;r++) for (let c=0;c<S.n;c++) if (prev[r][c]!==S.st[r][c]){
+      S.st[r][c] = prev[r][c];
+      if (prev[r][c]===0) clearCell(V,r,c); else if (prev[r][c]===1) putX(V,r,c); else putAnimal(V,r,c,false);
+    }
+    tell("Undone."); refresh([]);
+  }
+  function hint(){
+    if (S.done) return;
+    document.querySelectorAll(".cell.hint").forEach(e=>e.classList.remove("hint"));
+    const P = placed(), sol = new Set(S.data.solution.map(x=>key(...x)));
+    const mark = (r,c) => V.cells[r][c].classList.add("hint");
+    for (let i=0;i<P.length;i++) for (let j=i+1;j<P.length;j++) if (V.M.conflict(P[i],P[j])){ mark(...P[i]); mark(...P[j]); return tell("First fix the clash. These two cannot both stay.", "bad"); }
+    const wrong = P.find(p => !sol.has(key(...p)));
+    if (wrong){ mark(...wrong); return tell(`Hmm. This ${ANIM[V.M.animalAt(...wrong)].hi} is not in the right place. Look again.`, "bad"); }
+    const wrongX = []; S.st.forEach((row,r)=>row.forEach((v,c)=>{ if (v===1 && sol.has(key(r,c))) wrongX.push([r,c]); }));
+    if (wrongX.length){ mark(...wrongX[0]); return tell("Careful: you put an X here, but somebody does live here.", "bad"); }
+    const cand = (r,c) => S.st[r][c]!==1 && S.st[r][c]!==2 && !P.some(p => V.M.conflict(p,[r,c]));
+    for (const u of V.M.units){
+      if (P.some(p => u.cells.some(q=>q[0]===p[0]&&q[1]===p[1]))) continue;
+      const left = u.cells.filter(([r,c]) => cand(r,c));
+      if (left.length===1){ mark(...left[0]); const nm = u.kind==="mohalla" ? `this ${ANIM[V.M.ra[u.i]].hi} mohalla` : `this ${u.kind}`;
+        return tell(`Look here. In ${nm}, this is the <b>only</b> place left.`); }
+    }
+    const next = S.data.solution.find(([r,c]) => S.st[r][c]!==2);
+    mark(...next);
+    tell(`Try thinking about this cell. A <b>${ANIM[V.M.animalAt(...next)].hi}</b> lives here.`);
+  }
+  $("#undoBtn").onclick = undo; $("#hintBtn").onclick = hint; $("#resetBtn").onclick = () => start(S.name);
+  $("#againBtn").onclick = () => start(S.name);
+  $("#autoBtn").onclick = e => { S.auto = !S.auto; e.currentTarget.setAttribute("aria-pressed", S.auto); e.currentTarget.textContent = "Auto-dots: " + (S.auto?"on":"off"); refresh([]); };
+  $("#shareBtn").onclick = async () => { try { await navigator.clipboard.writeText(lastShare); $("#shareBtn").textContent = "Copied!"; } catch { $("#shareBtn").textContent = "Copy blocked"; } };
+  document.querySelectorAll(".tabs .btn").forEach(b => b.onclick = () => {
+    document.querySelectorAll(".tabs .btn").forEach(x => x.setAttribute("aria-pressed", x===b));
+    start(b.dataset.board);
+  });
+  start("mixed");
+  return {get state(){ return S; }, setCell, start, hint, undo, get view(){ return V; }};
+})();
+window.Game = Game;
+
+/* ---------------- chapters ---------------- */
+(function chapters(){
+  const CH = [
+    ["billi","Billi ki Gali","Cats only. Learn the classic rules."],
+    ["mendak","Mendak Talab","Frogs join. Knight-jump space."],
+    ["ullu","Ullu Raat","Owls. Long diagonal space."],
+    ["kutta","Kutta Chowk","Dogs. Easy and hard animals mixed."],
+    ["bandar","Bandar Mandir","Monkeys. Corners are fine now!"],
+    ["rock","Patthar","Rocks: cells where nobody sits."],
+    ["two","Do-Do","Two animals per row and colour."],
+  ];
+  const roof = ["#e8833a","#5a9e4b","#6b5ca5","#a26b37","#c69a18","#7c7468","#c2410c"];
+  const wall = ["#ffe3c9","#ddf0c9","#e7e1fb","#f3e1cb","#f8ecbb","#e6e1d9","#ffd9c4"];
+  $("#houses").innerHTML = CH.map(([a,name,txt],i) => {
+    const win = (a==="rock") ? `<ellipse cx="60" cy="98" rx="20" ry="13" fill="#9c9488"/><ellipse cx="55" cy="94" rx="8" ry="4" fill="#bdb6ab"/>`
+      : (a==="two") ? `<g transform="translate(34 76) scale(.27)"><use href="#a-billi"/></g><g transform="translate(60 76) scale(.27)"><use href="#a-mendak"/></g>`
+      : `<g transform="translate(40 72) scale(.4)"><use href="#a-${a}"/></g>`;
+    return `<div class="house reveal" style="--rd:${i*110}ms">
+      <svg class="hs" viewBox="0 0 120 130"><path d="M10 58 L60 14 L110 58Z" fill="${roof[i]}"/><rect x="20" y="56" width="80" height="66" rx="4" fill="${wall[i]}"/>
+      <rect x="20" y="56" width="80" height="66" rx="4" fill="none" stroke="#2a211b" stroke-width="2.5"/><path d="M10 58 L60 14 L110 58" fill="none" stroke="#2a211b" stroke-width="2.5" stroke-linejoin="round"/>
+      <circle class="lamp" cx="60" cy="40" r="6" fill="#fde68a" style="animation-delay:${i*.4}s"/>${win}</svg>
+      <div class="ch">CHAPTER ${i+1}</div><h3>${name}</h3><p>${txt}</p></div>`;
+  }).join("");
+})();
+
+/* ---------------- daily ---------------- */
+(function daily(){
+  const day0 = Date.UTC(2026,9,4), no = Math.max(1, Math.floor((Date.now()-day0)/864e5)+1);
+  $("#dailyNo").textContent = "#" + no;
+  const B = BOARDS.hero, M = makeModel(B), sol = new Set(B.solution.map(x=>x.join(",")));
+  const g = $("#shareGrid");
+  g.innerHTML = B.regions.flatMap((row,r)=>row.map((_,c)=>`<i class="${sol.has(r+","+c)?"":""}" style="background:${M.tint(r,c)};--fd:${(r*6+c)*45}ms"></i>`)).join("");
+  const kinds = [...new Set(B.animals)].map(a=>ANIM[a].emoji).join("");
+  const text = `Gali Gang #${no}  ${kinds}\n\u23F1 2:41   \u274C 0   \u2B50\u2B50\u2B50\n\u{1F525} 12 day streak`;
+  $("#shareText").textContent = text;
+  $("#dailyShare").onclick = async () => { try { await navigator.clipboard.writeText(text); } catch {} const t=$("#toast"); t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1600); };
+  new IntersectionObserver((es,o) => es.forEach(e => { if (e.isIntersecting){ g.classList.add("go"); o.disconnect(); } }), {threshold:.4}).observe(g);
+})();
+
+/* ---------------- scroll reveal ---------------- */
+(function(){
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add("on"); io.unobserve(e.target); } }), {threshold:.12, rootMargin:"0px 0px -6% 0px"});
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+})();
+</script>
+</body>
+</html>
