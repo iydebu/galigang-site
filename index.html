@@ -498,7 +498,7 @@ canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:non
     <div class="legend reveal" id="legend"></div>
     <div class="how reveal">
      <div class="k"><b>Tap</b><span>Put an <b>X</b>: nobody lives here. Tap again to clear it.</span></div>
-     <div class="k"><b class="x2">Double-tap</b><span>Place the animal. Double-tap it again to take it back.</span></div>
+     <div class="k"><b class="x2">Double-tap</b><span>Place the animal. A right animal stays for good. A wrong one comes off with another double-tap.</span></div>
      <div class="k"><b>Drag</b><span>Paint many X in one go. Start on an X to erase X's.</span></div>
      <div class="k"><b>Hold</b><span>Press and hold an animal to see its personal space.</span></div>
      <div class="k"><b>Dots</b><span>Small dots show the cells your animals already block. Two animals that clash shake and get a red line.</span></div>
@@ -567,15 +567,11 @@ canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:non
   <div class="get reveal">
    <img class="appicon" src="appicon.png" alt="Gali Gang app icon" width="150" height="150">
    <div>
-    <div class="kicker">Early access &middot; v0.1.0</div>
+    <div class="kicker">Early access &middot; v0.1.1</div>
     <h2>Play it now on Android</h2>
     <p>The Play Store release is on the way. Until then you can install the early access build straight from here. It is free, with a few ads.</p>
-    <a class="btn btn-main" href="https://github.com/iydebu/galigang-site/releases/download/v0.1.0/GaliGang-0.1.0.apk" download>Download APK &middot; 44 MB</a>
+    <a class="btn btn-main" href="https://github.com/iydebu/galigang-site/releases/download/v0.1.1/GaliGang-0.1.1.apk" download>Download APK &middot; 44 MB</a>
     <div class="meta">
-     
-     <span class="safe">&#10003; VirusTotal: 0 of 56 scanners flagged it</span>
-     <a href="https://www.virustotal.com/gui/file/dd1f126962570a3be5724fb403268081fc31c8ffdee3c246cc6d9376e079b813" target="_blank" rel="noopener">See the scan report &rarr;</a>
-     
      <span>Android 8+ &middot; 5 Oct 2026</span>
     </div>
     <details>
@@ -586,7 +582,7 @@ canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:non
       <li>Tap <b>Install</b>, then open Gali Gang. Later you can switch to the Play Store version.</li>
      </ol>
     </details>
-    <div class="sha">SHA-256: dd1f126962570a3be5724fb403268081fc31c8ffdee3c246cc6d9376e079b813</div>
+    <div class="sha">SHA-256: ce222c7149b9221871c9f3db3ff3847af62640f35d0d166917ccd277481aad9d</div>
    </div>
   </div>
  </div>
@@ -594,7 +590,7 @@ canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:non
 
 <footer>
  <div class="wrap">
-  <div class="credit"><b>Gali Gang</b><br>Game and website by <b style="font-size:inherit">Devashish Tiwari (Debu)</b><br>Early access v0.1.0 &middot; &copy; 2026 &middot; <a href="privacy.html">Privacy policy</a></div>
+  <div class="credit"><b>Gali Gang</b><br>Game and website by <b style="font-size:inherit">Devashish Tiwari (Debu)</b><br>Early access v0.1.1 &middot; &copy; 2026 &middot; <a href="privacy.html">Privacy policy</a></div>
   <div><a href="https://iydebu.com" target="_blank" rel="noopener">Made by Debu (iydebu) &rarr;</a></div>
  </div>
 </footer>
@@ -831,7 +827,7 @@ const Game = (() => {
   function start(name){
     const data = BOARDS[name];
     V = buildBoard(host, data);
-    S = {name, data, n:data.size, st:[...Array(data.size)].map(()=>Array(data.size).fill(0)), hist:[], t0:0, tick:0, done:false, complete:new Set(), auto:S?S.auto:true, streak:0};
+    S = {name, data, n:data.size, st:[...Array(data.size)].map(()=>Array(data.size).fill(0)), hist:[], t0:0, tick:0, done:false, complete:new Set(), kept:new Set(), auto:S?S.auto:true, streak:0};
     tap = null;
     $("#placedDots").innerHTML = "<i></i>".repeat(data.size);
     clearInterval(clockIv); $("#timer").textContent = "0:00";
@@ -913,10 +909,15 @@ const Game = (() => {
     clearInterval(clockIv);
     clockIv = setInterval(() => { const s = Math.floor((Date.now()-S.t0)/1000); $("#timer").textContent = `${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`; }, 250);
   }
+  // Same rule as the real game: a right animal (in the answer) stays for good once placed.
+  // Tap, drag and undo cannot take it off; Restart clears it. A wrong animal still comes off.
+  const isKept = (r,c) => S.kept.has(key(r,c));
   function setCell(r,c,v,{record=true, fx=true}={}){
     if (S.done || S.st[r][c]===v) return;
+    if (isKept(r,c)) return;
     if (record) S.hist.push(S.st.map(row=>row.slice()));
     S.st[r][c] = v; startClock();
+    if (v===2 && S.data.solution.some(([a,b]) => a===r && b===c)) S.kept.add(key(r,c));
     document.querySelectorAll(".cell.hint").forEach(e=>e.classList.remove("hint"));
     if (v===0) clearCell(V,r,c); else if (v===1) putX(V,r,c); else { putAnimal(V,r,c); if (fx) ripple(V,r,c); if (navigator.vibrate && navigator.userActivation && navigator.userActivation.hasBeenActive) navigator.vibrate(8); }
     if (v===2 || S.st[r][c]===0) tell(HELP);
@@ -928,6 +929,7 @@ const Game = (() => {
   const DOUBLE = 300;
   function tapCell(r,c){
     if (S.done) return;
+    if (isKept(r,c)){ tap = null; ripple(V,r,c); return tell(`This <b>${ANIM[V.M.animalAt(r,c)].hi}</b> is in its right place. It stays.`, "good"); }
     const now = performance.now();
     const dbl = tap && tap.S===S && tap.r===r && tap.c===c && now - tap.t <= DOUBLE && S.hist.length===tap.stamp;
     if (dbl){
@@ -989,7 +991,7 @@ const Game = (() => {
     if (S.done || !S.hist.length) return;
     const prev = S.hist.pop();
     tap = null; S.streak = 0;
-    for (let r=0;r<S.n;r++) for (let c=0;c<S.n;c++) if (prev[r][c]!==S.st[r][c]){ S.st[r][c] = prev[r][c]; paint(r,c); }
+    for (let r=0;r<S.n;r++) for (let c=0;c<S.n;c++) if (prev[r][c]!==S.st[r][c] && !isKept(r,c)){ S.st[r][c] = prev[r][c]; paint(r,c); }
     tell("Undone."); refresh([]);
   }
   function hint(){
