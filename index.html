@@ -287,7 +287,7 @@ footer .credit{font-size:15px;line-height:1.7}
 .get details{margin-top:16px;color:#d8c7e6;font-size:15px}
 .get summary{cursor:pointer;color:#fff;font:700 15px "Baloo 2"}
 .get ol{margin:8px 0 0;padding-left:20px;line-height:1.6}
-/* request form: no public download, Debu emails the APK (posts to iydebu.com/api/access -> his Discord) */
+/* request form: no public download, Debu shares the Drive folder (posts to iydebu.com/api/access -> his Discord) */
 .ask{display:grid;gap:12px;max-width:440px}
 .ask label{display:grid;gap:5px;font:700 15px "Baloo 2";color:#fff}
 .ask label i{font-style:normal;font-weight:500;color:#b9a5cc}
@@ -581,10 +581,10 @@ canvas#petals{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:non
    <div>
     <div class="kicker">Early access &middot; v0.1.3</div>
     <h2>Play it now on Android</h2>
-    <p>The Play Store release is on the way. Until then the early access build is not a public download: tell me who you are and I will email it to you. It is free, with a few ads.</p>
+    <p>The Play Store release is on the way. Until then the early access build is not a public download: tell me who you are and I will share the build folder with you on Google Drive. New builds go into the same folder. It is free, with a few ads.</p>
     <form id="ask" class="ask" novalidate>
      <label>Your name<input name="name" autocomplete="name" maxlength="80" required></label>
-     <label>Your email<input name="email" type="email" autocomplete="email" maxlength="120" required></label>
+     <label><span>Your email <i>(a Google / Gmail account)</i></span><input name="email" type="email" autocomplete="email" maxlength="120" required></label>
      <label><span>Anything to add? <i>(optional)</i></span><textarea name="note" rows="2" maxlength="500" placeholder="For example: my phone model"></textarea></label>
      <input class="hp" name="bot-field" tabindex="-1" autocomplete="off" aria-hidden="true">
      <button class="btn btn-main" type="submit">Request early access</button>
@@ -1081,7 +1081,7 @@ window.Game = Game;
   document.querySelectorAll(".reveal").forEach(el => io.observe(el));
 })();
 
-/* request early access: the APK is not public; the request goes to Debu (iydebu.com function -> Discord), he emails it */
+/* request early access: the APK is not public; the request goes to Debu (iydebu.com function -> Discord), he shares the Google Drive build folder */
 (()=>{
   const f=document.getElementById('ask'); if(!f) return;
   const API=/^(127\.0\.0\.1|localhost)$/.test(location.hostname)?'http://127.0.0.1:8092/api/access':'https://iydebu.com/api/access';
@@ -1098,7 +1098,7 @@ window.Game = Game;
       const r=await fetch(API,{method:'POST',headers:{'content-type':'text/plain'},body:JSON.stringify({game:'galigang',
         name:v('name'),email:v('email'),note:v('note'),device:/Android/i.test(navigator.userAgent)?'Android':(navigator.platform||''),'bot-field':v('bot-field')})});
       if(!r.ok) throw 0;
-      f.classList.add('sent'); say('Thank you. I will email the APK to <b>'+v('email').replace(/[<>&"]/g,'')+'</b> soon. Check your spam folder too.','ok');
+      f.classList.add('sent'); say('Thank you. I will share the build folder on Google Drive with <b>'+v('email').replace(/[<>&"]/g,'')+'</b> soon. Google will email you the link.','ok');
     }catch{
       btn.disabled=false;
       say('Could not send right now. Please email me at <a href="mailto:'+MAIL+'?subject=Gali%20Gang%20early%20access">'+MAIL+'</a>.','err');
